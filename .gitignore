@@ -1,0 +1,17 @@
+HumanMovementVisualizer/nbproject/private/
+HumanMovementVisualizer/build/
+HumanMovementVisualizer/nbbuild/
+HumanMovementVisualizer/dist/
+HumanMovementVisualizer/nbdist/
+HumanMovementVisualizer/nbactions.xml
+HumanMovementVisualizer/nb-configuration.xml
+HumanMovementVisualizer/.nb-gradle/
+
+SeleniumTests/nbproject/private/
+SeleniumTests/build/
+SeleniumTests/nbbuild/
+SeleniumTests/dist/
+SeleniumTests/nbdist/
+SeleniumTests/nbactions.xml
+SeleniumTests/nb-configuration.xml
+SeleniumTests/.nb-gradle/
