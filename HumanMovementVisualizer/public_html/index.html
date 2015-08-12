@@ -19,13 +19,14 @@ and open the template in the editor.
     <body>
 
         <div id="toolContainer">
+            <div id="toolContainerBasemap">
+                <input id="shapeFile" type="file" accept="application/zip" />
+                <button id="btnLoad" class="toolButton">Load</button>
+                <select id="selectBaseMap" disabled></select>
+                <br>
 
-            <input id="shapeFile" type="file" accept="application/zip" />
-            <button id="btnLoad" class="toolButton">Load</button>
-            <select id="selectBaseMap" disabled></select>
-            <br>
-
-            <button id="btnDraw" class="toolButton">Draw</button>
+                <button id="btnDraw" class="toolButton">Draw</button>
+            </div>
             <br>
             <button id="btnTest" class="toolButton">Test</button>
             <br>
@@ -34,24 +35,34 @@ and open the template in the editor.
             <br>
             <button id="btnPin" class="toolButton">Pin</button>
             <br>
-            <input id="csvFile" type="file" accept=".csv" />
-            <button id="btnLoadCSV" class="toolButton">Load CSV</button>
-            <select id="selectFilterDataBy" disabled>
-                <option value="allData">All</option>
-                <option value="region">Region</option>
-            </select>
-            <br>
-            <select id="selectFlowDirection" disabled>
-                <option value="from">From</option>
-                <option value="to">To</option>
-            </select>
+            <div id="toolContainerCSV">
+                <input id="csvFile" type="file" accept=".csv" />
+                <button id="btnLoadCSV" class="toolButton">Load CSV</button>
+                <select id="selectFilterDataBy" disabled>
+                    <option value="allData">All</option>
+                    <option value="region">Region</option>
+                </select>
+                <br>
+                <select id="selectFlowDirection" disabled>
+                    <option value="from">From</option>
+                    <option value="to">To</option>
+                </select>
 
-            <select id="selectRegion" disabled></select>
-            <button id="btnShowFlows" class="toolButton">Show Flows</button>
+                <select id="selectRegion" disabled></select>
+                <button id="btnShowFlows" class="toolButton">Show Flows</button>
+            </div>
+            <div id="toolContainerSave">
+                <button id="btnSaveStatic" class="toolButton">Save as Image</button>
+                
+                
+            </div>
         </div>
-        
+
         <div id="dataHintContainer">
             <p id="dataHintText"><p>
+        </div>
+        <div id="staticImage">
+            
         </div>
         <div id="mapContainer"></div>
 

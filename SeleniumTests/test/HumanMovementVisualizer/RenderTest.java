@@ -28,7 +28,7 @@ public class RenderTest {
 
     @BeforeClass
     public static void setUpClass() {
-        System.setProperty("webdriver.chrome.driver", "E:\\UoM\\Sem 5\\Software Engineering Project\\Project\\Code\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "E:\\UoM\\Sem 5\\Software Engineering Project\\Project\\Lib\\chromedriver.exe");
         driver = new ChromeDriver();
         driver.get("file:///E:/UoM/Sem%205/Software%20Engineering%20Project/Project/Code/HumanMovementVisualizer/public_html/index.html");
     }

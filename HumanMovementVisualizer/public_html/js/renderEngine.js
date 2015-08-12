@@ -134,7 +134,7 @@ DataMapper.drawFlowLink = function (lineData) {
     var source = DataMapper.mapProjection(DataMapper.getCoordinates(lineData.Source));
     var destination = DataMapper.mapProjection(DataMapper.getCoordinates(lineData.Destination));
     var color = DataMapper.flowVolumeToColor(lineData.Volume);
-    
+
     MapContainer.groupFlowLinks.append("line")
             .datum(lineData)
             .attr("x1", source[0])
@@ -179,28 +179,48 @@ DataMapper.maxFlowVolume = 0;
 DataMapper.flowVolumeToColor = function (volume) {
 
     var flowVolume = parseInt(volume);
-    var average = (DataMapper.minFlowVolume + DataMapper.maxFlowVolume) / 2;
-    var R = 0;
-    var G = 0;
-    var B = 0;
-    if (flowVolume <= average)
+    var minVolume = DataMapper.minFlowVolume;
+    var maxVolume = DataMapper.maxFlowVolume;
+    var colorStepSize = (maxVolume - minVolume) / 7;
+    var color = "#FFFFFF";
+    if (minVolume <= flowVolume && flowVolume < (minVolume + (colorStepSize * 1)))
     {
-        G = 255;
-        R = 255 * ((flowVolume - DataMapper.minFlowVolume) / (average - DataMapper.minFlowVolume));
+        color = "#217BAD";
     }
-    else
+    else if ((minVolume + (colorStepSize * 1)) <= flowVolume && flowVolume < (minVolume + (colorStepSize * 2)))
     {
-        R = 255;
-        G = 255 * (DataMapper.maxFlowVolume - flowVolume) / (DataMapper.maxFlowVolume - average);
+        color = "#39B59C";
     }
-    var rgb = "rgb(" + Math.floor(R) + ", " + Math.floor(G) + ", " + B + ")";
-    return rgb;
+    else if ((minVolume + (colorStepSize * 2)) <= flowVolume && flowVolume < (minVolume + (colorStepSize * 3)))
+    {
+        color = "#9CD64A";
+    }
+    else if ((minVolume + (colorStepSize * 3)) <= flowVolume && flowVolume < (minVolume + (colorStepSize * 4)))
+    {
+        color = "#FFFF00";
+    }
+    else if ((minVolume + (colorStepSize * 4)) <= flowVolume && flowVolume < (minVolume + (colorStepSize * 5)))
+    {
+        color = "#FFD608";
+    }
+    else if ((minVolume + (colorStepSize * 5)) <= flowVolume && flowVolume < (minVolume + (colorStepSize * 6)))
+    {
+        color = "#FF8C00";
+    }
+    else if ((minVolume + (colorStepSize * 6)) <= flowVolume && flowVolume <= maxVolume)
+    {
+        color = "#E73118";
+    }
+
+    return color;
 };
 
 
 // decode the given csv data and create required data structures
 DataMapper.decodeCSVData = function (csvData) {
 
+    DataMapper.minFlowVolume = Number.MAX_VALUE;
+    DataMapper.maxFlowVolume = 0;
     $.each(csvData, function (i, dataRow) {
 
         var tmpVolume = parseInt(dataRow.Volume);
@@ -218,4 +238,110 @@ DataMapper.decodeCSVData = function (csvData) {
             DataMapper.regionListDestination.push(dataRow.Destination);
 
     });
+    DataMapper.drawLegend();
+};
+
+// display the legend of the data
+DataMapper.drawLegend = function () {
+
+    MapContainer.groupLegend = MapContainer.svgMain.append("g").attr("id", "mapLegend");
+
+    var x = MapContainer.width * (2 / 100);
+    var y = MapContainer.height * (90 / 100);
+    var rectW = 20;
+    var rectH = 20;
+    var strokeW = 1;
+
+    MapContainer.groupLegend.append("rect")
+            .attr("x", x)
+            .attr("y", y - (rectH * 0))
+            .attr("width", rectW)
+            .attr("height", rectH)
+            .style("fill", "#217BAD")
+            .style("stroke-width", strokeW)
+            .style("stroke", "black");
+    MapContainer.groupLegend.append("rect")
+            .attr("x", x)
+            .attr("y", y - (rectH * 1))
+            .attr("width", rectW)
+            .attr("height", rectH)
+            .style("fill", "#39B59C")
+            .style("stroke-width", strokeW)
+            .style("stroke", "black");
+    MapContainer.groupLegend.append("rect")
+            .attr("x", x)
+            .attr("y", y - (rectH * 2))
+            .attr("width", rectW)
+            .attr("height", rectH)
+            .style("fill", "#9CD64A")
+            .style("stroke-width", strokeW)
+            .style("stroke", "black");
+    MapContainer.groupLegend.append("rect")
+            .attr("x", x)
+            .attr("y", y - (rectH * 3))
+            .attr("width", rectW)
+            .attr("height", rectH)
+            .style("fill", "#FFFF00")
+            .style("stroke-width", strokeW)
+            .style("stroke", "black");
+    MapContainer.groupLegend.append("rect")
+            .attr("x", x)
+            .attr("y", y - (rectH * 4))
+            .attr("width", rectW)
+            .attr("height", rectH)
+            .style("fill", "#FFD608")
+            .style("stroke-width", strokeW)
+            .style("stroke", "black");
+    MapContainer.groupLegend.append("rect")
+            .attr("x", x)
+            .attr("y", y - (rectH * 5))
+            .attr("width", rectW)
+            .attr("height", rectH)
+            .style("fill", "#FF8C00")
+            .style("stroke-width", strokeW)
+            .style("stroke", "black");
+    MapContainer.groupLegend.append("rect")
+            .attr("x", x)
+            .attr("y", y - (rectH * 6))
+            .attr("width", rectW)
+            .attr("height", rectH)
+            .style("fill", "#E73118")
+            .style("stroke-width", strokeW)
+            .style("stroke", "black");
+
+    var minVolume = Math.floor(DataMapper.minFlowVolume);
+    var maxVolume = Math.floor(DataMapper.maxFlowVolume);
+    var colorStepSize = Math.floor((maxVolume - minVolume) / 7);
+    var fontSize = 14;
+    var textXOffset = 24;
+
+    MapContainer.groupLegend.append("text").text(minVolume + " to " + (minVolume + (colorStepSize * 1)))
+            .attr("x", x + textXOffset)
+            .attr("y", (y + fontSize) - (rectH * 0))
+            .style({"font-size": fontSize + "px"});
+    MapContainer.groupLegend.append("text").text((minVolume + (colorStepSize * 1)) + " to " + (minVolume + (colorStepSize * 2)))
+            .attr("x", x + textXOffset)
+            .attr("y", (y + fontSize) - (rectH * 1))
+            .style({"font-size": fontSize + "px"});
+    MapContainer.groupLegend.append("text").text((minVolume + (colorStepSize * 2)) + " to " + (minVolume + (colorStepSize * 3)))
+            .attr("x", x + textXOffset)
+            .attr("y", (y + fontSize) - (rectH * 2))
+            .style({"font-size": fontSize + "px"});
+    MapContainer.groupLegend.append("text").text((minVolume + (colorStepSize * 3)) + " to " + (minVolume + (colorStepSize * 4)))
+            .attr("x", x + textXOffset)
+            .attr("y", (y + fontSize) - (rectH * 3))
+            .style({"font-size": fontSize + "px"});
+    MapContainer.groupLegend.append("text").text((minVolume + (colorStepSize * 4)) + " to " + (minVolume + (colorStepSize * 5)))
+            .attr("x", x + textXOffset)
+            .attr("y", (y + fontSize) - (rectH * 4))
+            .style({"font-size": fontSize + "px"});
+    MapContainer.groupLegend.append("text").text((minVolume + (colorStepSize * 5)) + " to " + (minVolume + (colorStepSize * 6)))
+            .attr("x", x + textXOffset)
+            .attr("y", (y + fontSize) - (rectH * 5))
+            .style({"font-size": fontSize + "px"});
+    MapContainer.groupLegend.append("text").text((minVolume + (colorStepSize * 6)) + " to " + maxVolume)
+            .attr("x", x + textXOffset)
+            .attr("y", (y + fontSize) - (rectH * 6))
+            .style({"font-size": fontSize + "px"});
+
 };

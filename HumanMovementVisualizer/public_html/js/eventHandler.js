@@ -26,7 +26,7 @@ $(document).ready(function () {
     });
 
     MapContainer.svgMain.call(MapNavigator.mapZoom);
-    //$("#btnTest").click();
+    $("#btnTest").click();
 });
 
 $(window).resize(function () {
@@ -82,6 +82,7 @@ $("#btnLoadCSV").click(function () {
     var file = $("#csvFile")[0].files[0];
     $('#selectFilterDataBy').attr("disabled", true);
     ContentManager.loadCSVFile(file, function (csvData) {
+        $("#mapLegend").remove();
         DataMapper.decodeCSVData(csvData);
     });
     $('#selectFilterDataBy').removeAttr("disabled");
@@ -140,7 +141,7 @@ $("#btnShowFlows").click(function () {
     MapContainer.groupFlowLinks.selectAll('line').on("mouseenter", function () {
 
         var lineData = d3.select(this).datum();
-        $("#dataHintText").text("Volume From "+ lineData.Source + " To " + lineData.Destination +" = " + lineData.Volume);
+        $("#dataHintText").text("Volume From " + lineData.Source + " To " + lineData.Destination + " = " + lineData.Volume);
         d3.select(this).style("stroke-width", 10);
     });
 
@@ -216,6 +217,43 @@ $("#btnPin").click(function () {
 
 });
 
+
+// handles the flow region color enable button click event
+$("#btnSaveStatic").click(function () {
+
+    var svgContent = MapContainer.svgMain
+            .attr("version", 1.1)
+            .attr("xmlns", "http://www.w3.org/2000/svg")
+            .node().parentNode.innerHTML;
+
+    var imgsrc = 'data:image/svg+xml;base64,' + btoa(svgContent);
+
+    d3.select("#staticImage").append("canvas")
+            .attr('width', MapContainer.width)
+            .attr('height', MapContainer.height)
+            .attr("id", "tempCanvas");
+
+    var canvas = document.querySelector("canvas");
+    var context = canvas.getContext("2d");
+
+    var image = new Image;
+    image.src = imgsrc;
+    image.onload = function () {
+        context.drawImage(image, 0, 0);
+
+        var canvasdata = canvas.toDataURL("image/png");
+
+        var anchorDownload = document.createElement("a");
+        anchorDownload.download = "static_visualization.png";
+        anchorDownload.href = canvasdata;
+        anchorDownload.click();
+    };
+    $("#tempCanvas").remove();
+
+    return false;
+
+});
+
 $("#btnTest").click(function () {
 
 //    var t = mapProjection([80.213954, 9.835223]);
@@ -259,12 +297,44 @@ $("#btnTest").click(function () {
 //    });
 
 
-    MapContainer.groupFlowLinks.selectAll('line').on("click", function () {
+//    MapContainer.groupFlowLinks.selectAll('line').on("click", function () {
+//
+//        console.log(this);
+//        console.log(d3.select(this).datum());
+//        d3.select(this).style({fill: 'green'});
+//    });
 
-        console.log(this);
-        console.log(d3.select(this).datum());
-        d3.select(this).style({fill: 'green'});
-    });
+//    var html = MapContainer.svgMain
+//            .attr("version", 1.1)
+//            .attr("xmlns", "http://www.w3.org/2000/svg")
+//            .node().parentNode.innerHTML;
+//
+//    //console.log(html);
+//    var imgsrc = 'data:image/svg+xml;base64,' + btoa(html);
+//    
+//    d3.select("#staticImage").append("canvas")
+//            .attr('width',MapContainer.width)
+//            .attr('height',MapContainer.height)
+//            .attr("id","tempCanvas");
+//
+//    var canvas = document.querySelector("canvas"),
+//            context = canvas.getContext("2d");
+//
+//    var image = new Image;
+//    image.src = imgsrc;
+//    image.onload = function () {
+//        context.drawImage(image, 0, 0);
+//
+//        var canvasdata = canvas.toDataURL("image/png");
+//
+//        var anchorDownload = document.createElement("a");
+//        anchorDownload.download = "static_visualization.png";
+//        anchorDownload.href = canvasdata;
+//        anchorDownload.click();
+//    };
+//    $("#tempCanvas").remove();
+
+ 
     return false;
 });
 

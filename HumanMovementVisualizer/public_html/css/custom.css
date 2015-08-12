@@ -33,12 +33,13 @@ body{
     border: 2px solid;
     z-index: 50;
     width: 20%;
-    height: 50%;
+    height: 80%;
     top: 10%;
     left: 76%;
     /* display: inline-block; */
     /* vertical-align: middle; */
     background-color: rgba(50,50,50,0.8);
+    overflow-y: scroll;
 }
 
 
@@ -88,4 +89,9 @@ body{
     text-align: center;
     font-size: 14px;
     font-family: sans-serif;
+}
+
+#staticImage{
+    display: none;
+    
 }

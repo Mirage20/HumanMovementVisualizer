@@ -35,19 +35,19 @@ QUnit.test("DataMapper.flowVolumeToColor Test", function (assert) {
 
     DataMapper.minFlowVolume = 0;
     DataMapper.maxFlowVolume = 100;
-    assert.deepEqual(DataMapper.flowVolumeToColor(50), "rgb(255, 255, 0)", "Passed!");
+    assert.deepEqual(DataMapper.flowVolumeToColor(50), "#FFFF00", "Passed!");
     
     DataMapper.minFlowVolume = 0;
     DataMapper.maxFlowVolume = 150;
-    assert.deepEqual(DataMapper.flowVolumeToColor(75), "rgb(255, 255, 0)", "Passed!");
+    assert.deepEqual(DataMapper.flowVolumeToColor(25), "#39B59C", "Passed!");
     
     DataMapper.minFlowVolume = 1600;
     DataMapper.maxFlowVolume = 3490;
-    assert.deepEqual(DataMapper.flowVolumeToColor(2947), "rgb(255, 146, 0)", "Passed!");
+    assert.deepEqual(DataMapper.flowVolumeToColor(2947), "#FFD608", "Passed!");
     
     DataMapper.minFlowVolume = 7374;
     DataMapper.maxFlowVolume = 25623;
-    assert.deepEqual(DataMapper.flowVolumeToColor(12047), "rgb(130, 255, 0)", "Passed!");
+    assert.deepEqual(DataMapper.flowVolumeToColor(12047), "#39B59C", "Passed!");
 
 });
 
