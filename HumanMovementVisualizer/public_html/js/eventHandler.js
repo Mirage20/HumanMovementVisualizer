@@ -81,9 +81,19 @@ $("#btnLoad").click(function () {
 $("#btnLoadCSV").click(function () {
     var file = $("#csvFile")[0].files[0];
     $('#selectFilterDataBy').attr("disabled", true);
-    ContentManager.loadCSVFile(file, function (csvData) {
-        $("#mapLegend").remove();
+    ContentManager.loadCSVFile(file, function (csvData) {      
         DataMapper.decodeCSVData(csvData);
+        DataMapper.drawLegend(function(){
+            MapContainer.groupLegend.selectAll("rect").on("click",function(){
+                var selectionID = $(this).attr("id");
+                $("#input" + selectionID).val(DataMapper.LegenColors[selectionID]);
+                $("#input" + selectionID).click();
+                $("#input" + selectionID).change(function (){
+                    $("#" + selectionID).css("fill",$("#input" + selectionID).val());
+                    DataMapper.LegenColors[selectionID] = $("#input" + selectionID).val();                 
+                });               
+            });
+        });
     });
     $('#selectFilterDataBy').removeAttr("disabled");
     return false;

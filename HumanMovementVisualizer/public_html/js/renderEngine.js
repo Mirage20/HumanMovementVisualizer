@@ -185,31 +185,31 @@ DataMapper.flowVolumeToColor = function (volume) {
     var color = "#FFFFFF";
     if (minVolume <= flowVolume && flowVolume < (minVolume + (colorStepSize * 1)))
     {
-        color = "#217BAD";
+        color = DataMapper.LegenColors.legendColor1;
     }
     else if ((minVolume + (colorStepSize * 1)) <= flowVolume && flowVolume < (minVolume + (colorStepSize * 2)))
     {
-        color = "#39B59C";
+        color = DataMapper.LegenColors.legendColor2;
     }
     else if ((minVolume + (colorStepSize * 2)) <= flowVolume && flowVolume < (minVolume + (colorStepSize * 3)))
     {
-        color = "#9CD64A";
+        color = DataMapper.LegenColors.legendColor3;
     }
     else if ((minVolume + (colorStepSize * 3)) <= flowVolume && flowVolume < (minVolume + (colorStepSize * 4)))
     {
-        color = "#FFFF00";
+        color = DataMapper.LegenColors.legendColor4;
     }
     else if ((minVolume + (colorStepSize * 4)) <= flowVolume && flowVolume < (minVolume + (colorStepSize * 5)))
     {
-        color = "#FFD608";
+        color = DataMapper.LegenColors.legendColor5;
     }
     else if ((minVolume + (colorStepSize * 5)) <= flowVolume && flowVolume < (minVolume + (colorStepSize * 6)))
     {
-        color = "#FF8C00";
+        color = DataMapper.LegenColors.legendColor6;
     }
     else if ((minVolume + (colorStepSize * 6)) <= flowVolume && flowVolume <= maxVolume)
     {
-        color = "#E73118";
+        color = DataMapper.LegenColors.legendColor7;
     }
 
     return color;
@@ -238,12 +238,22 @@ DataMapper.decodeCSVData = function (csvData) {
             DataMapper.regionListDestination.push(dataRow.Destination);
 
     });
-    DataMapper.drawLegend();
+};
+
+DataMapper.LegenColors = {
+     legendColor1: "#217BAD",
+     legendColor2: "#39B59C",
+     legendColor3: "#9CD64A",
+     legendColor4: "#FFFF00",
+     legendColor5: "#FFD608",
+     legendColor6: "#FF8C00",
+     legendColor7: "#E73118"
 };
 
 // display the legend of the data
-DataMapper.drawLegend = function () {
+DataMapper.drawLegend = function (callback) {
 
+    $("#mapLegend").remove();
     MapContainer.groupLegend = MapContainer.svgMain.append("g").attr("id", "mapLegend");
 
     var x = MapContainer.width * (2 / 100);
@@ -257,7 +267,8 @@ DataMapper.drawLegend = function () {
             .attr("y", y - (rectH * 0))
             .attr("width", rectW)
             .attr("height", rectH)
-            .style("fill", "#217BAD")
+            .attr("id","legendColor1")
+            .style("fill", DataMapper.LegenColors.legendColor1)
             .style("stroke-width", strokeW)
             .style("stroke", "black");
     MapContainer.groupLegend.append("rect")
@@ -265,7 +276,8 @@ DataMapper.drawLegend = function () {
             .attr("y", y - (rectH * 1))
             .attr("width", rectW)
             .attr("height", rectH)
-            .style("fill", "#39B59C")
+            .attr("id","legendColor2")
+            .style("fill", DataMapper.LegenColors.legendColor2)
             .style("stroke-width", strokeW)
             .style("stroke", "black");
     MapContainer.groupLegend.append("rect")
@@ -273,7 +285,8 @@ DataMapper.drawLegend = function () {
             .attr("y", y - (rectH * 2))
             .attr("width", rectW)
             .attr("height", rectH)
-            .style("fill", "#9CD64A")
+            .attr("id","legendColor3")
+            .style("fill", DataMapper.LegenColors.legendColor3)
             .style("stroke-width", strokeW)
             .style("stroke", "black");
     MapContainer.groupLegend.append("rect")
@@ -281,7 +294,8 @@ DataMapper.drawLegend = function () {
             .attr("y", y - (rectH * 3))
             .attr("width", rectW)
             .attr("height", rectH)
-            .style("fill", "#FFFF00")
+            .attr("id","legendColor4")
+            .style("fill", DataMapper.LegenColors.legendColor4)
             .style("stroke-width", strokeW)
             .style("stroke", "black");
     MapContainer.groupLegend.append("rect")
@@ -289,7 +303,8 @@ DataMapper.drawLegend = function () {
             .attr("y", y - (rectH * 4))
             .attr("width", rectW)
             .attr("height", rectH)
-            .style("fill", "#FFD608")
+            .attr("id","legendColor5")
+            .style("fill", DataMapper.LegenColors.legendColor5)
             .style("stroke-width", strokeW)
             .style("stroke", "black");
     MapContainer.groupLegend.append("rect")
@@ -297,7 +312,8 @@ DataMapper.drawLegend = function () {
             .attr("y", y - (rectH * 5))
             .attr("width", rectW)
             .attr("height", rectH)
-            .style("fill", "#FF8C00")
+            .attr("id","legendColor6")
+            .style("fill", DataMapper.LegenColors.legendColor6)
             .style("stroke-width", strokeW)
             .style("stroke", "black");
     MapContainer.groupLegend.append("rect")
@@ -305,7 +321,8 @@ DataMapper.drawLegend = function () {
             .attr("y", y - (rectH * 6))
             .attr("width", rectW)
             .attr("height", rectH)
-            .style("fill", "#E73118")
+            .attr("id","legendColor7")
+            .style("fill", DataMapper.LegenColors.legendColor7)
             .style("stroke-width", strokeW)
             .style("stroke", "black");
 
@@ -344,4 +361,6 @@ DataMapper.drawLegend = function () {
             .attr("y", (y + fontSize) - (rectH * 6))
             .style({"font-size": fontSize + "px"});
 
+    
+    callback();
 };

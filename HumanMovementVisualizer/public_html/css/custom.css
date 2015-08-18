@@ -32,16 +32,29 @@ body{
 
     border: 2px solid;
     z-index: 50;
-    width: 20%;
+    width: 20vw;
     height: 80%;
     top: 10%;
-    left: 76%;
+    left: 78vw;
+    max-width: 300px;
+    max-height: 520px;
     /* display: inline-block; */
     /* vertical-align: middle; */
     background-color: rgba(50,50,50,0.8);
-    overflow-y: scroll;
+    //overflow-y: scroll;
 }
 
+
+#debugContainer{
+    //display: none;
+    
+}
+
+.subContainer{
+    border: 2px solid #0A68E2;
+    padding: 5px;
+    margin: 2px 0px;
+}
 
 .toolButton {
 
@@ -94,4 +107,66 @@ body{
 #staticImage{
     display: none;
     
+}
+
+.toolLabel{
+    font-family: sans-serif;
+    font-size: 14px;
+    color: white;
+    padding-right: 4px;
+}
+
+#toolHeading{
+    /* display: block; */
+ 
+}
+
+#toolHeadingLabel{
+    font-family: sans-serif;
+    font-size: 18px;
+    color: white;
+    //text-align: center;
+    display: block;
+    width: inherit;
+    text-align: center;
+}
+
+#toolSlde{
+    height: 20px;
+    
+    width: 20px;
+    display: block;
+    background-color: rgba(50,50,50,0.8);
+    border: 1px solid black;
+    color: white;
+    text-align: center;
+    padding-bottom: 2px;
+    float: left;
+    margin-left: -32px;
+    margin-top: -12px;
+}
+
+#toolSlde:hover{
+    background-color: rgba(50,50,50,1);
+}
+
+.toolContainerLabel{
+    display: block;
+    
+    font-size: 16px;
+    color: white;
+    font-style: oblique;
+    text-align: left;
+    padding: 0 0 4px 0;
+}
+
+.fileInput{
+    color: white;
+    
+    padding-bottom: 2px;
+}
+
+#hiddenContainer{
+    position: absolute;
+    visibility: hidden;
 }

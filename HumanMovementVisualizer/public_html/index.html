@@ -19,29 +19,34 @@ and open the template in the editor.
     <body>
 
         <div id="toolContainer">
-            <div id="toolContainerBasemap">
-                <input id="shapeFile" type="file" accept="application/zip" />
-                <button id="btnLoad" class="toolButton">Load</button>
-                <select id="selectBaseMap" disabled></select>
-                <br>
-
-                <button id="btnDraw" class="toolButton">Draw</button>
+            <div id="toolHeading">
+                <div id="toolSlde">&#x276f;</div>
+                <span id="toolHeadingLabel">Tools</span>
+                <!--&#x276e;-->
             </div>
-            <br>
-            <button id="btnTest" class="toolButton">Test</button>
-            <br>
-            <input id="long" type="text" value="80.213954"/>
-            <input id="lati" type="text" value="9.835223"/>
-            <br>
-            <button id="btnPin" class="toolButton">Pin</button>
-            <br>
-            <div id="toolContainerCSV">
-                <input id="csvFile" type="file" accept=".csv" />
-                <button id="btnLoadCSV" class="toolButton">Load CSV</button>
+            <div id="toolContainerBasemap" class="subContainer">
+                <span class="toolContainerLabel">Shapefile</span>
+                <input id="shapeFile" type="file" accept="application/zip" class="fileInput"/>
+                <br>
+                <select id="selectBaseMap" disabled></select>
+                <button id="btnLoad" class="toolButton">Load File</button>         
+                <br>
+                <button id="btnDraw" class="toolButton">Draw Map</button>
+
+            </div>
+
+            <div id="toolContainerCSV" class="subContainer">
+                 <span class="toolContainerLabel">CSV Data</span>
+                <input id="csvFile" type="file" accept=".csv" class="fileInput"/>
+                <button id="btnLoadCSV" class="toolButton">Load File</button>
+                <br>
+                <span class="toolLabel">Filter By:</span>
                 <select id="selectFilterDataBy" disabled>
                     <option value="allData">All</option>
                     <option value="region">Region</option>
                 </select>
+                <br>
+                <span class="toolLabel">Flow Direction:</span>
                 <br>
                 <select id="selectFlowDirection" disabled>
                     <option value="from">From</option>
@@ -49,12 +54,35 @@ and open the template in the editor.
                 </select>
 
                 <select id="selectRegion" disabled></select>
+                <br>
                 <button id="btnShowFlows" class="toolButton">Show Flows</button>
             </div>
-            <div id="toolContainerSave">
+            <div id="toolContainerSave" class="subContainer">
+                <span class="toolContainerLabel">Save</span>
                 <button id="btnSaveStatic" class="toolButton">Save as Image</button>
-                
-                
+
+
+            </div>
+
+            <div id="hiddenContainer">
+                <input id="inputlegendColor1" type="color">
+                <input id="inputlegendColor2" type="color">
+                <input id="inputlegendColor3" type="color">
+                <input id="inputlegendColor4" type="color">
+                <input id="inputlegendColor5" type="color">
+                <input id="inputlegendColor6" type="color">
+                <input id="inputlegendColor7" type="color">
+            </div>
+
+            <div id="debugContainer" class="subContainer">
+                <span class="toolContainerLabel">For Developers</span>
+                <button id="btnTest" class="toolButton">Test</button>
+                <br>
+                <input id="long" type="text" value="80.213954"/>
+                <input id="lati" type="text" value="9.835223"/>
+                <br>
+                <button id="btnPin" class="toolButton">Pin</button>
+                <br>
             </div>
         </div>
 
@@ -62,7 +90,7 @@ and open the template in the editor.
             <p id="dataHintText"><p>
         </div>
         <div id="staticImage">
-            
+
         </div>
         <div id="mapContainer"></div>
 
