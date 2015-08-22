@@ -26,6 +26,7 @@ $(document).ready(function () {
     });
 
     MapContainer.svgMain.call(MapNavigator.mapZoom);
+    $("#googleMapContainer").css("visibility", "hidden");
     $("#btnTest").click();
 });
 
@@ -48,12 +49,14 @@ $("#btnDraw").click(function () {
         MapContainer.groupBaseMap.selectAll('path').on("mouseenter", function () {
 
             $("#dataHintText").text("Region : " + BaseMap.getRegionNameFromPathData(d3.select(this).datum()));
-            d3.select(this).style("fill", "white");
+            if ($("#chkOverlay").prop('checked') === false)
+                d3.select(this).style("fill", "white");
         });
 
         MapContainer.groupBaseMap.selectAll('path').on("mouseleave", function () {
             $("#dataHintText").text("");
-            d3.select(this).style("fill", "#F3F1ED");
+            if ($("#chkOverlay").prop('checked') === false)
+                d3.select(this).style("fill", "#F3F1ED");
         });
     }
     return false;
@@ -81,17 +84,17 @@ $("#btnLoad").click(function () {
 $("#btnLoadCSV").click(function () {
     var file = $("#csvFile")[0].files[0];
     $('#selectFilterDataBy').attr("disabled", true);
-    ContentManager.loadCSVFile(file, function (csvData) {      
+    ContentManager.loadCSVFile(file, function (csvData) {
         DataMapper.decodeCSVData(csvData);
-        DataMapper.drawLegend(function(){
-            MapContainer.groupLegend.selectAll("rect").on("click",function(){
+        DataMapper.drawLegend(function () {
+            MapContainer.groupLegend.selectAll("rect").on("click", function () {
                 var selectionID = $(this).attr("id");
                 $("#input" + selectionID).val(DataMapper.LegenColors[selectionID]);
                 $("#input" + selectionID).click();
-                $("#input" + selectionID).change(function (){
-                    $("#" + selectionID).css("fill",$("#input" + selectionID).val());
-                    DataMapper.LegenColors[selectionID] = $("#input" + selectionID).val();                 
-                });               
+                $("#input" + selectionID).change(function () {
+                    $("#" + selectionID).css("fill", $("#input" + selectionID).val());
+                    DataMapper.LegenColors[selectionID] = $("#input" + selectionID).val();
+                });
             });
         });
     });
@@ -152,14 +155,16 @@ $("#btnShowFlows").click(function () {
 
         var lineData = d3.select(this).datum();
         $("#dataHintText").text("Volume From " + lineData.Source + " To " + lineData.Destination + " = " + lineData.Volume);
-        d3.select(this).style("stroke-width", 10);
+        d3.select(this).attr("stroke-width", parseInt(DataMapper.flowLineWidth) + 2);
     });
 
     MapContainer.groupFlowLinks.selectAll('line').on("mouseleave", function () {
 
         $("#dataHintText").text("");
-        d3.select(this).style("stroke-width", 2);
+        d3.select(this).attr("stroke-width", parseInt(DataMapper.flowLineWidth));
     });
+
+    $('#slideFlowLineWidth').removeAttr("disabled");
     return false;
 });
 
@@ -264,6 +269,79 @@ $("#btnSaveStatic").click(function () {
 
 });
 
+// handles the line width change slider
+$("#slideFlowLineWidth").on("input", function () {
+
+    DataMapper.flowLineWidth = $("#slideFlowLineWidth").val();
+    $("#slideValueText").text(DataMapper.flowLineWidth);
+
+
+    $.each($("#groupFlowLinks line"), function (i, line) {
+        $(line).attr("stroke-width", DataMapper.flowLineWidth);
+    });
+
+
+});
+
+// handles the enable google map checkbox change
+$("#chkGoogleMaps").change(function () {
+
+    if ($("#googleMapContainer").css("visibility") === 'hidden')
+    {
+        $("#googleMapContainer").hide();
+        $("#googleMapContainer").css("visibility", "");
+    }
+    if ($("#chkGoogleMaps").prop('checked'))
+    {
+        $("#googleMapContainer").show("clip", {}, 1000, null);
+    }
+    else
+    {
+        $("#googleMapContainer").hide("clip", {}, 1000, null);
+    }
+
+
+});
+
+// handles the enable overlay checkbox change
+$("#chkOverlay").change(function () {
+
+
+    if ($("#chkOverlay").prop('checked'))
+    {
+
+        $("#svgMap").css("background-color", "transparent");
+        MapContainer.groupBaseMap.selectAll('path').style("fill", "rgba(243, 241, 237, 0.2)");
+        MapContainer.groupBaseMap.selectAll('path').style("stroke-width", "1px");
+        
+    }
+    else
+    {
+        $("#svgMap").css("background-color", "#BADDFF");
+        MapContainer.groupBaseMap.selectAll('path').style("fill", "#F3F1ED");
+        MapContainer.groupBaseMap.selectAll('path').style("stroke-width", "0.5px");
+    }
+
+
+});
+
+$("#toolSlde").click(function () {
+    $("#toolSlde").hide();
+    $("#toolContainer").toggle("slide", {direction: "right"}, 1000, function () {
+        if ($("#toolContainer").css("display") === 'none')
+        {
+            $("#toolSlde").html("&#x276e;");
+            $("#toolSlde").css("margin-left", "98%");
+        }
+        else
+        {
+            $("#toolSlde").html("&#x276f;");
+            $("#toolSlde").css("margin-left", "-30px");
+        }
+        $("#toolSlde").show();
+    });
+});
+
 $("#btnTest").click(function () {
 
 //    var t = mapProjection([80.213954, 9.835223]);
@@ -344,7 +422,7 @@ $("#btnTest").click(function () {
 //    };
 //    $("#tempCanvas").remove();
 
- 
+
     return false;
 });
 

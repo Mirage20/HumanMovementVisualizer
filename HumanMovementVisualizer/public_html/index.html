@@ -12,17 +12,21 @@ and open the template in the editor.
         <link rel="shortcut icon" href="icons/favicon.ico">
         <link rel="stylesheet" href="css/custom.css"/>
         <script src="js/jquery-2.1.3.min.js"></script>
+        <script src="js/jquery-ui.min.js"></script>
         <script src="js/d3.min.js"></script>
         <script src="js/shp.js"></script>       
 
     </head>
     <body>
-
+        <div id="toolAnimContainer">
+            <div id="toolSlde">&#x276f;</div>
+            <!--&#x276e;-->
+        </div>
         <div id="toolContainer">
             <div id="toolHeading">
-                <div id="toolSlde">&#x276f;</div>
+                
                 <span id="toolHeadingLabel">Tools</span>
-                <!--&#x276e;-->
+                
             </div>
             <div id="toolContainerBasemap" class="subContainer">
                 <span class="toolContainerLabel">Shapefile</span>
@@ -56,6 +60,19 @@ and open the template in the editor.
                 <select id="selectRegion" disabled></select>
                 <br>
                 <button id="btnShowFlows" class="toolButton">Show Flows</button>
+            </div>
+            <div id="toolContainerEdit" class="subContainer">
+                <span class="toolContainerLabel">Edit</span>
+                <span  class="toolLabel">Line Width:</span>
+                <input id="slideFlowLineWidth" type="range" min="1" max="10" value="2" step="1" disabled/>
+                <span id="slideValueText" class="toolLabel">2</span>
+                
+                <input id="chkOverlay" type="checkbox" />
+                <span  class="toolLabel">Enable Overlay</span>
+                <br>
+                <input id="chkGoogleMaps" type="checkbox" />
+                <span  class="toolLabel">Enable Google Maps</span>
+
             </div>
             <div id="toolContainerSave" class="subContainer">
                 <span class="toolContainerLabel">Save</span>
@@ -92,10 +109,14 @@ and open the template in the editor.
         <div id="staticImage">
 
         </div>
+        <div id="googleMapContainer"></div>
+        
         <div id="mapContainer"></div>
 
         <script src="js/contentManager.js"></script>
         <script src="js/renderEngine.js"></script>
         <script src="js/eventHandler.js"></script>
+        <script src="js/googleMapHandler.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
     </body>
 </html>

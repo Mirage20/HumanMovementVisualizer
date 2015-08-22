@@ -11,12 +11,22 @@ and open the template in the editor.
 body{
     margin: 0;
     padding: 0;
+    overflow: hidden;
 }
 #mapContainer{
     position: absolute;
     top: 0;
     left: 0;
     z-index: 10;
+}
+
+#googleMapContainer{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 8;
+    height: 100vh;
+    width: 100vw;
 }
 
 #svgMap{
@@ -41,7 +51,22 @@ body{
     /* display: inline-block; */
     /* vertical-align: middle; */
     background-color: rgba(50,50,50,0.8);
-    //overflow-y: scroll;
+    overflow-y: scroll;
+}
+
+#toolAnimContainer{
+    padding: 10px;
+    position: absolute;
+
+    //border: 2px solid;
+    z-index: 48;
+    width: 20vw;
+    height: 80%;
+    top: 10%;
+    left: 78vw;
+    max-width: 300px;
+    max-height: 520px;
+    pointer-events: none;
 }
 
 
@@ -142,12 +167,13 @@ body{
     text-align: center;
     padding-bottom: 2px;
     float: left;
-    margin-left: -32px;
-    margin-top: -12px;
+    margin-left: -30px;
+    margin-top: -10px;
+    pointer-events: auto;
 }
 
 #toolSlde:hover{
-    background-color: rgba(50,50,50,1);
+    background-color: rgba(0,0,0,1);
 }
 
 .toolContainerLabel{
@@ -169,4 +195,9 @@ body{
 #hiddenContainer{
     position: absolute;
     visibility: hidden;
+}
+
+#slideMapOpacity,
+#slideFlowLineWidth{
+    height: 10px;
 }

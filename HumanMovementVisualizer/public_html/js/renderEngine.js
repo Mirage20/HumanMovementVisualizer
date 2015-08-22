@@ -125,6 +125,7 @@ DataMapper.getCoordinates = function (region) {
         return DataMapper.regionToCoordinates[region];
 };
 
+DataMapper.flowLineWidth = 2;
 //draw a link between given given csv data row
 DataMapper.drawFlowLink = function (lineData) {
 
@@ -141,7 +142,7 @@ DataMapper.drawFlowLink = function (lineData) {
             .attr("y1", source[1])
             .attr("x2", destination[0])
             .attr("y2", destination[1])
-            .attr("stroke-width", 2)
+            .attr("stroke-width", DataMapper.flowLineWidth)
             .attr("stroke", color)
             .style("vector-effect", "non-scaling-stroke");
 
