@@ -16,43 +16,42 @@ function initMap() {
             lat: 7.62960744686815,
             lng: 80.7009801565226
         },
-        
-        zoom: 8
+        zoom: 8,
+        disableDefaultUI: true
     });
 
-    //     var styles = [
-    //         {
-    //             stylers: [
-    //                 {
-    //                     hue: "#00ffe6"
-    //                 },
-    //                 {
-    //                     saturation: -20
-    //                 }
-    //                            ]
-    //                          }, {
-    //             featureType: "road",
-    //             elementType: "geometry",
-    //             stylers: [
-    //                 {
-    //                     lightness: 100
-    //                 },
-    //                 {
-    //                     visibility: "simplified"
-    //                 }
-    //                            ]
-    //                          }, {
-    //             featureType: "road",
-    //             elementType: "labels",
-    //             stylers: [
-    //                 {
-    //                     visibility: "off"
-    //                 }
-    //                            ]
-    //                          }
-    //                        ];
-    //
-    //     map.setOptions({
-    //         styles: styles
-    //     });
+//    var styles = [
+//        {
+//            stylers: [
+//                {
+//                    hue: "#00ffe6"
+//                },
+//                {
+//                    saturation: -20
+//                }
+//            ]
+//        }
+//    ];
+
+//    googleMap.setOptions({
+//        styles: styles
+//    });
 }
+
+var GoogleMapControl = {};
+
+GoogleMapControl.setZoom = function (zoomLevel)
+{
+    googleMap.setZoom(Math.floor(zoomLevel));
+};
+
+GoogleMapControl.oldTranslate = [0, 0];
+
+GoogleMapControl.setTranslation = function (newTranslate)
+{
+    googleMap.panBy(GoogleMapControl.oldTranslate[0] - newTranslate[0], GoogleMapControl.oldTranslate[1] - newTranslate[1]);
+};
+
+GoogleMapControl.setPan = function(centroid){
+    googleMap.panTo(new google.maps.LatLng(centroid[1], centroid[0]));
+};

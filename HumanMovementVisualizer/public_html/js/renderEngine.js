@@ -9,13 +9,14 @@
 
 // base map object which handles the geo data for drawing the map
 var BaseMap = {};
-
+BaseMap.centroid = [80.7009801565226,7.62960744686815];
+BaseMap.scale = 1;
 BaseMap.draw = function (geojson) {
     var scale = 150;
-
+    BaseMap.centroid = d3.geo.centroid(geojson);
     var projection = d3.geo.mercator()
             .scale(scale)
-            .center(d3.geo.centroid(geojson))
+            .center(BaseMap.centroid)
             .translate([MapContainer.width / 2, MapContainer.height / 2]);
 
     var path = d3.geo.path().projection(projection);
@@ -27,7 +28,7 @@ BaseMap.draw = function (geojson) {
     var scale = (hscale < vscale) ? hscale : vscale;
     var offset = [MapContainer.width - (bounds[0][0] + bounds[1][0]) / 2, MapContainer.height - (bounds[0][1] + bounds[1][1]) / 2];
 
-
+    BaseMap.scale =scale;
 
     projection = d3.geo.mercator().center(d3.geo.centroid(geojson)).scale(scale).translate(offset);
     path = path.projection(projection);

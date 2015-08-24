@@ -9,7 +9,7 @@
 /* global BaseMap */
 /* global DataMapper */
 /* global MapContainer */
-/* global MapNavigator */
+/* global MapNavigator, GoogleMapControl */
 
 $(document).ready(function () {
 
@@ -22,11 +22,15 @@ $(document).ready(function () {
 
     MapNavigator.mapZoom = d3.behavior.zoom().scaleExtent([.1, 10]).on("zoom", function () {
         //console.log("translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");     
-        MapContainer.groupMain.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        MapContainer.groupMain.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");       
+        if ($("#chkEnableGPan").prop('checked') === true)
+            GoogleMapControl.setTranslation(d3.event.translate);
+        GoogleMapControl.oldTranslate = d3.event.translate;
     });
 
     MapContainer.svgMain.call(MapNavigator.mapZoom);
     $("#googleMapContainer").css("visibility", "hidden");
+    $("#toolContainerGoogleMaps").hide();
     $("#btnTest").click();
 });
 
@@ -45,7 +49,9 @@ $("#btnDraw").click(function () {
     {
         var baseMap = ContentManager.geoJSONMaps[baseMapIndex];
         BaseMap.draw(baseMap);
-
+        GoogleMapControl.setPan(BaseMap.centroid);
+        var convertedZoom = 8.025762957806712 - (6.164035415846804 * Math.exp(-0.0005881212588888687 * BaseMap.scale));
+        GoogleMapControl.setZoom(convertedZoom);
         MapContainer.groupBaseMap.selectAll('path').on("mouseenter", function () {
 
             $("#dataHintText").text("Region : " + BaseMap.getRegionNameFromPathData(d3.select(this).datum()));
@@ -294,10 +300,12 @@ $("#chkGoogleMaps").change(function () {
     if ($("#chkGoogleMaps").prop('checked'))
     {
         $("#googleMapContainer").show("clip", {}, 1000, null);
+        $("#toolContainerGoogleMaps").show("blind", {}, 1000, null);
     }
     else
     {
         $("#googleMapContainer").hide("clip", {}, 1000, null);
+        $("#toolContainerGoogleMaps").hide("blind", {}, 1000, null);
     }
 
 
@@ -311,18 +319,31 @@ $("#chkOverlay").change(function () {
     {
 
         $("#svgMap").css("background-color", "transparent");
-        MapContainer.groupBaseMap.selectAll('path').style("fill", "rgba(243, 241, 237, 0.2)");
-        MapContainer.groupBaseMap.selectAll('path').style("stroke-width", "1px");
-        
+        if (typeof MapContainer.groupBaseMap !== 'undefined')
+        {
+            MapContainer.groupBaseMap.selectAll('path').style("fill", "rgba(243, 241, 237, 0.2)");
+            MapContainer.groupBaseMap.selectAll('path').style("stroke-width", "1px");
+        }
+
     }
     else
     {
         $("#svgMap").css("background-color", "#BADDFF");
-        MapContainer.groupBaseMap.selectAll('path').style("fill", "#F3F1ED");
-        MapContainer.groupBaseMap.selectAll('path').style("stroke-width", "0.5px");
+        if (typeof MapContainer.groupBaseMap !== 'undefined')
+        {
+            MapContainer.groupBaseMap.selectAll('path').style("fill", "#F3F1ED");
+            MapContainer.groupBaseMap.selectAll('path').style("stroke-width", "0.5px");
+        }
     }
 
 
+});
+
+// handles the google map zoom change slider
+$("#slideGMapZoom").on("input", function () {
+
+    $("#slideGZoomValueText").text($("#slideGMapZoom").val());
+    GoogleMapControl.setZoom($("#slideGMapZoom").val());
 });
 
 $("#toolSlde").click(function () {

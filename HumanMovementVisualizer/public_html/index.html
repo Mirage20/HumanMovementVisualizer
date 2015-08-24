@@ -64,14 +64,27 @@ and open the template in the editor.
             <div id="toolContainerEdit" class="subContainer">
                 <span class="toolContainerLabel">Edit</span>
                 <span  class="toolLabel">Line Width:</span>
-                <input id="slideFlowLineWidth" type="range" min="1" max="10" value="2" step="1" disabled/>
+                <input id="slideFlowLineWidth" class="sliderInput" type="range" min="1" max="10" value="2" step="1" disabled/>
                 <span id="slideValueText" class="toolLabel">2</span>
-                
+                <br>
                 <input id="chkOverlay" type="checkbox" />
                 <span  class="toolLabel">Enable Overlay</span>
                 <br>
                 <input id="chkGoogleMaps" type="checkbox" />
                 <span  class="toolLabel">Enable Google Maps</span>
+
+            </div>
+            
+            <div id="toolContainerGoogleMaps" class="subContainer">
+                <span class="toolContainerLabel">Google Map Control</span>
+                <span  class="toolLabel">Zoom:</span>
+                <input id="slideGMapZoom" class="sliderInput" type="range" min="1" max="16" value="8" step="1"/>
+                <span id="slideGZoomValueText" class="toolLabel">8</span>
+                <br>
+                <input id="chkEnableGPan" type="checkbox" />
+                <span  class="toolLabel">Enable Google Map Panning</span>
+                <br>
+                
 
             </div>
             <div id="toolContainerSave" class="subContainer">

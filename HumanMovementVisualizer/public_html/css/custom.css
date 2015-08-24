@@ -197,7 +197,6 @@ body{
     visibility: hidden;
 }
 
-#slideMapOpacity,
-#slideFlowLineWidth{
+.sliderInput{
     height: 10px;
 }
