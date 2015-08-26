@@ -9,11 +9,11 @@
 
 // base map object which handles the geo data for drawing the map
 var BaseMap = {};
-BaseMap.centroid = [80.7009801565226,7.62960744686815];
+BaseMap.centroid = [80.7009801565226, 7.62960744686815];
 BaseMap.scale = 1;
-BaseMap.regionFillColor = "#F3F1ED"; 
-BaseMap.regionStrokeColor = "rgb(128,128,128)"; 
-BaseMap.regionStrokeWidth = "0.5"; 
+BaseMap.regionFillColor = "#F3F1ED";
+BaseMap.regionStrokeColor = "rgb(128,128,128)";
+BaseMap.regionStrokeWidth = "0.5";
 BaseMap.draw = function (geojson) {
     var scale = 150;
     BaseMap.centroid = d3.geo.centroid(geojson);
@@ -31,7 +31,7 @@ BaseMap.draw = function (geojson) {
     var scale = (hscale < vscale) ? hscale : vscale;
     var offset = [MapContainer.width - (bounds[0][0] + bounds[1][0]) / 2, MapContainer.height - (bounds[0][1] + bounds[1][1]) / 2];
 
-    BaseMap.scale =scale;
+    BaseMap.scale = scale;
 
     projection = d3.geo.mercator().center(d3.geo.centroid(geojson)).scale(scale).translate(offset);
     path = path.projection(projection);
@@ -50,7 +50,7 @@ BaseMap.draw = function (geojson) {
             })
             .style("fill", BaseMap.regionFillColor)
             .style("stroke-width", BaseMap.regionStrokeWidth)
-            .style("stroke",  BaseMap.regionStrokeColor)
+            .style("stroke", BaseMap.regionStrokeColor)
             //.style("stroke-dasharray", "40,40")
             .style("vector-effect", "non-scaling-stroke");
 
@@ -177,6 +177,7 @@ DataMapper.clearRegionPoints = function () {
 
 DataMapper.regionListSource = new Array();
 DataMapper.regionListDestination = new Array();
+DataMapper.dateTimeList = new Array();
 DataMapper.minFlowVolume = Number.MAX_VALUE;
 DataMapper.maxFlowVolume = 0;
 
@@ -226,6 +227,10 @@ DataMapper.decodeCSVData = function (csvData) {
 
     DataMapper.minFlowVolume = Number.MAX_VALUE;
     DataMapper.maxFlowVolume = 0;
+    DataMapper.regionListSource = new Array();
+    DataMapper.regionListDestination = new Array();
+    DataMapper.dateTimeList = new Array();
+    
     $.each(csvData, function (i, dataRow) {
 
         var tmpVolume = parseInt(dataRow.Volume);
@@ -242,17 +247,20 @@ DataMapper.decodeCSVData = function (csvData) {
         if ($.inArray(dataRow.Destination, DataMapper.regionListDestination) === -1)
             DataMapper.regionListDestination.push(dataRow.Destination);
 
+        if ($.inArray(dataRow.Time, DataMapper.dateTimeList) === -1)
+            DataMapper.dateTimeList.push(dataRow.Time);
+
     });
 };
 
 DataMapper.LegenColors = {
-     legendColor1: "#217BAD",
-     legendColor2: "#39B59C",
-     legendColor3: "#9CD64A",
-     legendColor4: "#FFFF00",
-     legendColor5: "#FFD608",
-     legendColor6: "#FF8C00",
-     legendColor7: "#E73118"
+    legendColor1: "#217BAD",
+    legendColor2: "#39B59C",
+    legendColor3: "#9CD64A",
+    legendColor4: "#FFFF00",
+    legendColor5: "#FFD608",
+    legendColor6: "#FF8C00",
+    legendColor7: "#E73118"
 };
 
 // display the legend of the data
@@ -272,7 +280,7 @@ DataMapper.drawLegend = function (callback) {
             .attr("y", y - (rectH * 0))
             .attr("width", rectW)
             .attr("height", rectH)
-            .attr("id","legendColor1")
+            .attr("id", "legendColor1")
             .style("fill", DataMapper.LegenColors.legendColor1)
             .style("stroke-width", strokeW)
             .style("stroke", "black");
@@ -281,7 +289,7 @@ DataMapper.drawLegend = function (callback) {
             .attr("y", y - (rectH * 1))
             .attr("width", rectW)
             .attr("height", rectH)
-            .attr("id","legendColor2")
+            .attr("id", "legendColor2")
             .style("fill", DataMapper.LegenColors.legendColor2)
             .style("stroke-width", strokeW)
             .style("stroke", "black");
@@ -290,7 +298,7 @@ DataMapper.drawLegend = function (callback) {
             .attr("y", y - (rectH * 2))
             .attr("width", rectW)
             .attr("height", rectH)
-            .attr("id","legendColor3")
+            .attr("id", "legendColor3")
             .style("fill", DataMapper.LegenColors.legendColor3)
             .style("stroke-width", strokeW)
             .style("stroke", "black");
@@ -299,7 +307,7 @@ DataMapper.drawLegend = function (callback) {
             .attr("y", y - (rectH * 3))
             .attr("width", rectW)
             .attr("height", rectH)
-            .attr("id","legendColor4")
+            .attr("id", "legendColor4")
             .style("fill", DataMapper.LegenColors.legendColor4)
             .style("stroke-width", strokeW)
             .style("stroke", "black");
@@ -308,7 +316,7 @@ DataMapper.drawLegend = function (callback) {
             .attr("y", y - (rectH * 4))
             .attr("width", rectW)
             .attr("height", rectH)
-            .attr("id","legendColor5")
+            .attr("id", "legendColor5")
             .style("fill", DataMapper.LegenColors.legendColor5)
             .style("stroke-width", strokeW)
             .style("stroke", "black");
@@ -317,7 +325,7 @@ DataMapper.drawLegend = function (callback) {
             .attr("y", y - (rectH * 5))
             .attr("width", rectW)
             .attr("height", rectH)
-            .attr("id","legendColor6")
+            .attr("id", "legendColor6")
             .style("fill", DataMapper.LegenColors.legendColor6)
             .style("stroke-width", strokeW)
             .style("stroke", "black");
@@ -326,7 +334,7 @@ DataMapper.drawLegend = function (callback) {
             .attr("y", y - (rectH * 6))
             .attr("width", rectW)
             .attr("height", rectH)
-            .attr("id","legendColor7")
+            .attr("id", "legendColor7")
             .style("fill", DataMapper.LegenColors.legendColor7)
             .style("stroke-width", strokeW)
             .style("stroke", "black");
@@ -366,6 +374,6 @@ DataMapper.drawLegend = function (callback) {
             .attr("y", (y + fontSize) - (rectH * 6))
             .style({"font-size": fontSize + "px"});
 
-    
+
     callback();
 };

@@ -22,7 +22,7 @@ $(document).ready(function () {
 
     MapNavigator.mapZoom = d3.behavior.zoom().scaleExtent([.1, 10]).on("zoom", function () {
         //console.log("translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");     
-        MapContainer.groupMain.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");       
+        MapContainer.groupMain.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
         if ($("#chkEnableGPan").prop('checked') === true)
             GoogleMapControl.setTranslation(d3.event.translate);
         GoogleMapControl.oldTranslate = d3.event.translate;
@@ -89,7 +89,15 @@ $("#btnLoad").click(function () {
 // handles the csv data file load button click event
 $("#btnLoadCSV").click(function () {
     var file = $("#csvFile")[0].files[0];
+    $("#selectFilterDataBy").val("allData");
+    $("#selectFlowDirection").val("from");
+    $('#selectTime option').remove();
+    $('#selectRegion option').remove();
     $('#selectFilterDataBy').attr("disabled", true);
+    $('#selectFlowDirection').attr("disabled", true);
+    $('#selectRegion').attr("disabled", true);
+    $('#selectTime').attr("disabled", true);
+
     ContentManager.loadCSVFile(file, function (csvData) {
         DataMapper.decodeCSVData(csvData);
         DataMapper.drawLegend(function () {
@@ -103,8 +111,23 @@ $("#btnLoadCSV").click(function () {
                 });
             });
         });
+
+        $('#selectFilterDataBy').removeAttr("disabled");
+
+        if (DataMapper.dateTimeList[0] !== "") {
+
+            $('#selectTime').append($('<option>', {value: "all", text: "All"}));
+            $.each(DataMapper.dateTimeList, function (i, dateTime) {
+                $('#selectTime').append($('<option>', {
+                    value: dateTime,
+                    text: dateTime
+                }));
+
+            });
+            $('#selectTime').removeAttr("disabled");
+        }
+
     });
-    $('#selectFilterDataBy').removeAttr("disabled");
     return false;
 });
 
@@ -113,6 +136,7 @@ $("#btnShowFlows").click(function () {
     DataMapper.clearFlowLinks();
     DataMapper.clearRegionPoints();
     var regions = new Array();
+    var dataRows = new Array();
     $.each(ContentManager.csvData, function (i, dataRow) {
 
         if ($("#selectFilterDataBy").val() === 'region')
@@ -121,37 +145,38 @@ $("#btnShowFlows").click(function () {
             {
                 if ($("#selectRegion").val() === dataRow.Source)
                 {
-                    DataMapper.drawFlowLink(dataRow);
-                    if ($.inArray(dataRow.Source, regions) === -1)
-                        regions.push(dataRow.Source);
-                    if ($.inArray(dataRow.Destination, regions) === -1)
-                        regions.push(dataRow.Destination);
+                    dataRows.push(dataRow);
                 }
             }
             else if ($("#selectFlowDirection").val() === 'to')
             {
                 if ($("#selectRegion").val() === dataRow.Destination)
                 {
-                    DataMapper.drawFlowLink(dataRow);
-                    if ($.inArray(dataRow.Source, regions) === -1)
-                        regions.push(dataRow.Source);
-                    if ($.inArray(dataRow.Destination, regions) === -1)
-                        regions.push(dataRow.Destination);
+                    dataRows.push(dataRow);
                 }
             }
 
         }
         else
         {
-            DataMapper.drawFlowLink(dataRow);
-            if ($.inArray(dataRow.Source, regions) === -1)
-                regions.push(dataRow.Source);
-            if ($.inArray(dataRow.Destination, regions) === -1)
-                regions.push(dataRow.Destination);
+            dataRows.push(dataRow);
         }
 
     });
 
+    if ($("#selectTime").val() !== "all" && $("#selectTime option").length > 0) {
+        dataRows = jQuery.grep(dataRows, function (dataRow, index) {
+            return dataRow.Time === $("#selectTime").val();
+        });
+    }
+
+    $.each(dataRows, function (i, dataRow) {
+        DataMapper.drawFlowLink(dataRow);
+        if ($.inArray(dataRow.Source, regions) === -1)
+            regions.push(dataRow.Source);
+        if ($.inArray(dataRow.Destination, regions) === -1)
+            regions.push(dataRow.Destination);
+    });
 
     $.each(regions, function (i, region) {
         DataMapper.drawRegionPoint(region);
@@ -321,12 +346,12 @@ $("#chkOverlay").change(function () {
         $("#svgMap").css("background-color", "transparent");
         BaseMap.regionFillColor = "rgba(243, 241, 237, 0.2)";
         BaseMap.regionStrokeWidth = "1px";
-        BaseMap.regionStrokeColor = "rgb(0,0,0)"; 
+        BaseMap.regionStrokeColor = "rgb(0,0,0)";
         if (typeof MapContainer.groupBaseMap !== 'undefined')
         {
             MapContainer.groupBaseMap.selectAll('path').style("fill", BaseMap.regionFillColor);
             MapContainer.groupBaseMap.selectAll('path').style("stroke-width", BaseMap.regionStrokeWidth);
-            MapContainer.groupBaseMap.selectAll('path').style("stroke",  BaseMap.regionStrokeColor);
+            MapContainer.groupBaseMap.selectAll('path').style("stroke", BaseMap.regionStrokeColor);
         }
 
     }
@@ -335,12 +360,12 @@ $("#chkOverlay").change(function () {
         $("#svgMap").css("background-color", "#BADDFF");
         BaseMap.regionFillColor = "#F3F1ED";
         BaseMap.regionStrokeWidth = "0.5px";
-        BaseMap.regionStrokeColor = "rgb(128,128,128)"; 
+        BaseMap.regionStrokeColor = "rgb(128,128,128)";
         if (typeof MapContainer.groupBaseMap !== 'undefined')
         {
             MapContainer.groupBaseMap.selectAll('path').style("fill", BaseMap.regionFillColor);
             MapContainer.groupBaseMap.selectAll('path').style("stroke-width", BaseMap.regionStrokeWidth);
-            MapContainer.groupBaseMap.selectAll('path').style("stroke",  BaseMap.regionStrokeColor);
+            MapContainer.groupBaseMap.selectAll('path').style("stroke", BaseMap.regionStrokeColor);
         }
     }
 
