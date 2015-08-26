@@ -321,10 +321,12 @@ $("#chkOverlay").change(function () {
         $("#svgMap").css("background-color", "transparent");
         BaseMap.regionFillColor = "rgba(243, 241, 237, 0.2)";
         BaseMap.regionStrokeWidth = "1px";
+        BaseMap.regionStrokeColor = "rgb(0,0,0)"; 
         if (typeof MapContainer.groupBaseMap !== 'undefined')
         {
             MapContainer.groupBaseMap.selectAll('path').style("fill", BaseMap.regionFillColor);
             MapContainer.groupBaseMap.selectAll('path').style("stroke-width", BaseMap.regionStrokeWidth);
+            MapContainer.groupBaseMap.selectAll('path').style("stroke",  BaseMap.regionStrokeColor);
         }
 
     }
@@ -333,10 +335,12 @@ $("#chkOverlay").change(function () {
         $("#svgMap").css("background-color", "#BADDFF");
         BaseMap.regionFillColor = "#F3F1ED";
         BaseMap.regionStrokeWidth = "0.5px";
+        BaseMap.regionStrokeColor = "rgb(128,128,128)"; 
         if (typeof MapContainer.groupBaseMap !== 'undefined')
         {
             MapContainer.groupBaseMap.selectAll('path').style("fill", BaseMap.regionFillColor);
             MapContainer.groupBaseMap.selectAll('path').style("stroke-width", BaseMap.regionStrokeWidth);
+            MapContainer.groupBaseMap.selectAll('path').style("stroke",  BaseMap.regionStrokeColor);
         }
     }
 
