@@ -35,7 +35,7 @@ public class RenderTest {
 
     @AfterClass
     public static void tearDownClass() {
-//        driver.quit();
+        driver.quit();
     }
 
     @Before
@@ -52,7 +52,7 @@ public class RenderTest {
     // @Test
     // public void hello() {}
     @Test
-    public void testSampleFlow() {
+    public void testSampleFlow() throws InterruptedException {
 
         WebElement shapeFileInput = driver.findElement(By.id("shapeFile"));
         shapeFileInput.sendKeys("E:\\UoM\\Sem 5\\Software Engineering Project\\Project\\ShapeFiles\\LKA_adm.zip");
@@ -64,15 +64,83 @@ public class RenderTest {
         btnDrawBaseMap.click();
         
         WebElement csvFileInput = driver.findElement(By.id("csvFile"));
-        csvFileInput.sendKeys("E:\\UoM\\Sem 5\\Software Engineering Project\\Project\\ShapeFiles\\sample.csv");
+        csvFileInput.sendKeys("E:\\UoM\\Sem 5\\Software Engineering Project\\Project\\ShapeFiles\\Sample 2 LK1.csv");
         WebElement btnLoadCSVFile = driver.findElement(By.id("btnLoadCSV"));
         btnLoadCSVFile.click();        
         WebElement btnShowFlows = driver.findElement(By.id("btnShowFlows"));
         btnShowFlows.click();
+        Thread.sleep(2000);
+        
+        Select listFilter = new Select(driver.findElement(By.id("selectFilterDataBy")));
+        listFilter.selectByIndex(1);
+        Select listDirection = new Select(driver.findElement(By.id("selectFlowDirection")));
+        listDirection.selectByValue("from");
+        Select listRegion = new Select(driver.findElement(By.id("selectRegion")));
+        listRegion.selectByVisibleText("Colombo");
+        btnShowFlows.click();
+        Thread.sleep(2000);
+        
+        listDirection.selectByValue("to");
+        listRegion.selectByVisibleText("Colombo");
+        btnShowFlows.click();
+        Thread.sleep(2000);
+        
+        listDirection.selectByValue("to");
+        listRegion.selectByVisibleText("Kandy");
+        btnShowFlows.click();
+        Thread.sleep(2000);
+        
+        listDirection.selectByValue("from");
+        listRegion.selectByVisibleText("Kandy");
+        btnShowFlows.click();
+        Thread.sleep(2000);
+        
+        driver.findElement(By.id("chkOverlay")).click();
+        Thread.sleep(1000);
+        driver.findElement(By.id("chkGoogleMaps")).click();
+        Thread.sleep(2000);
+        driver.findElement(By.id("chkGoogleMaps")).click();
+        Thread.sleep(1000);
+        driver.findElement(By.id("chkOverlay")).click();
+        Thread.sleep(2000);
+        
+        driver.findElement(By.id("btnSaveStatic")).click();
         
         
         
-
+        
+        
+        // Time based Test
+        
+        
+        csvFileInput.sendKeys("E:\\UoM\\Sem 5\\Software Engineering Project\\Project\\ShapeFiles\\Sample 4 LK1 Time.csv");
+        btnLoadCSVFile.click();        
+        btnShowFlows.click();
+        Thread.sleep(2000);
+        
+        listFilter.selectByIndex(1);     
+        listDirection.selectByValue("to");       
+        listRegion.selectByVisibleText("Colombo");
+        btnShowFlows.click();
+        Thread.sleep(2000);
+        
+        Select listTime = new Select(driver.findElement(By.id("selectTime")));
+        listTime.selectByIndex(3);
+        btnShowFlows.click();
+        Thread.sleep(2000);
+        
+        listTime.selectByIndex(4);
+        btnShowFlows.click();
+        Thread.sleep(2000);
+        
+        listTime.selectByIndex(7);
+        btnShowFlows.click();
+        Thread.sleep(2000);
+       
+        
+        driver.findElement(By.id("btnSaveStatic")).click();
+        
+        Thread.sleep(5000);
 //        JavascriptExecutor javascript = (JavascriptExecutor) driver;
 //
 //        Object pagetitle = javascript.executeScript("return MapContainer");
