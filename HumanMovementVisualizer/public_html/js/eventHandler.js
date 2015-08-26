@@ -62,7 +62,7 @@ $("#btnDraw").click(function () {
         MapContainer.groupBaseMap.selectAll('path').on("mouseleave", function () {
             $("#dataHintText").text("");
             if ($("#chkOverlay").prop('checked') === false)
-                d3.select(this).style("fill", "#F3F1ED");
+                d3.select(this).style("fill", BaseMap.regionFillColor);
         });
     }
     return false;
@@ -319,20 +319,24 @@ $("#chkOverlay").change(function () {
     {
 
         $("#svgMap").css("background-color", "transparent");
+        BaseMap.regionFillColor = "rgba(243, 241, 237, 0.2)";
+        BaseMap.regionStrokeWidth = "1px";
         if (typeof MapContainer.groupBaseMap !== 'undefined')
         {
-            MapContainer.groupBaseMap.selectAll('path').style("fill", "rgba(243, 241, 237, 0.2)");
-            MapContainer.groupBaseMap.selectAll('path').style("stroke-width", "1px");
+            MapContainer.groupBaseMap.selectAll('path').style("fill", BaseMap.regionFillColor);
+            MapContainer.groupBaseMap.selectAll('path').style("stroke-width", BaseMap.regionStrokeWidth);
         }
 
     }
     else
     {
         $("#svgMap").css("background-color", "#BADDFF");
+        BaseMap.regionFillColor = "#F3F1ED";
+        BaseMap.regionStrokeWidth = "0.5px";
         if (typeof MapContainer.groupBaseMap !== 'undefined')
         {
-            MapContainer.groupBaseMap.selectAll('path').style("fill", "#F3F1ED");
-            MapContainer.groupBaseMap.selectAll('path').style("stroke-width", "0.5px");
+            MapContainer.groupBaseMap.selectAll('path').style("fill", BaseMap.regionFillColor);
+            MapContainer.groupBaseMap.selectAll('path').style("stroke-width", BaseMap.regionStrokeWidth);
         }
     }
 

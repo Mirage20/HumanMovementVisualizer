@@ -11,6 +11,9 @@
 var BaseMap = {};
 BaseMap.centroid = [80.7009801565226,7.62960744686815];
 BaseMap.scale = 1;
+BaseMap.regionFillColor = "#F3F1ED"; 
+BaseMap.regionStrokeColor = "rgb(128,128,128)"; 
+BaseMap.regionStrokeWidth = "0.5"; 
 BaseMap.draw = function (geojson) {
     var scale = 150;
     BaseMap.centroid = d3.geo.centroid(geojson);
@@ -45,9 +48,9 @@ BaseMap.draw = function (geojson) {
                 //console.log(d.properties.NAME_1);             
                 return d.id;
             })
-            .style("fill", "#F3F1ED")
-            .style("stroke-width", ".5")
-            .style("stroke", "rgb(128,128,128)")
+            .style("fill", BaseMap.regionFillColor)
+            .style("stroke-width", BaseMap.regionStrokeWidth)
+            .style("stroke",  BaseMap.regionStrokeColor)
             //.style("stroke-dasharray", "40,40")
             .style("vector-effect", "non-scaling-stroke");
 
