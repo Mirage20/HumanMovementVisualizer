@@ -31,6 +31,7 @@ $(document).ready(function () {
     MapContainer.svgMain.call(MapNavigator.mapZoom);
     $("#googleMapContainer").css("visibility", "hidden");
     $("#toolContainerGoogleMaps").hide();
+    $("#dataHintContainer").hide();
     $("#btnTest").click();
 });
 
@@ -53,14 +54,16 @@ $("#btnDraw").click(function () {
         var convertedZoom = 8.025762957806712 - (6.164035415846804 * Math.exp(-0.0005881212588888687 * BaseMap.scale));
         GoogleMapControl.setZoom(convertedZoom);
         MapContainer.groupBaseMap.selectAll('path').on("mouseenter", function () {
-
-            $("#dataHintText").text("Region : " + BaseMap.getRegionNameFromPathData(d3.select(this).datum()));
+            
+            $("#dataHintText").html("Region : <i>" + BaseMap.getRegionNameFromPathData(d3.select(this).datum()) +"</i>");
+            $("#dataHintContainer").show();
             if ($("#chkOverlay").prop('checked') === false)
                 d3.select(this).style("fill", "white");
         });
 
         MapContainer.groupBaseMap.selectAll('path').on("mouseleave", function () {
-            $("#dataHintText").text("");
+            $("#dataHintContainer").hide();
+            $("#dataHintText").html("");
             if ($("#chkOverlay").prop('checked') === false)
                 d3.select(this).style("fill", BaseMap.regionFillColor);
         });
@@ -185,13 +188,15 @@ $("#btnShowFlows").click(function () {
     MapContainer.groupFlowLinks.selectAll('line').on("mouseenter", function () {
 
         var lineData = d3.select(this).datum();
-        $("#dataHintText").text("Volume From " + lineData.Source + " To " + lineData.Destination + " = " + lineData.Volume);
+        $("#dataHintText").html("Volume From <i>" + lineData.Source + "</i> To <i>" + lineData.Destination + "</i> = <i>" + lineData.Volume + ((lineData.Time !== "") ? ("</i> at <i>" + lineData.Time + "</i>") : "</i>"));
+        $("#dataHintContainer").show();
         d3.select(this).attr("stroke-width", parseInt(DataMapper.flowLineWidth) + 2);
     });
 
     MapContainer.groupFlowLinks.selectAll('line').on("mouseleave", function () {
 
-        $("#dataHintText").text("");
+        $("#dataHintContainer").hide();
+        $("#dataHintText").html("");
         d3.select(this).attr("stroke-width", parseInt(DataMapper.flowLineWidth));
     });
 
