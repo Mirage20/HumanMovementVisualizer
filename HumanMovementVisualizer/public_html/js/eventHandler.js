@@ -15,10 +15,19 @@ $(document).ready(function () {
 
     MapContainer.width = $(window).width();
     MapContainer.height = $(window).height();
-    MapContainer.svgMain = d3.select("#mapContainer").append("svg").attr("id", "svgMap")
-            .attr("width", MapContainer.width)
-            .attr("height", MapContainer.height);
-    MapContainer.groupMain = MapContainer.svgMain.append("g").attr("id", "groupMain");
+
+    if (d3.select("#svgMap")[0][0] === null) {
+        MapContainer.svgMain = d3.select("#mapContainer").append("svg").attr("id", "svgMap")
+                .attr("width", MapContainer.width)
+                .attr("height", MapContainer.height);
+        MapContainer.groupMain = MapContainer.svgMain.append("g").attr("id", "groupMain");
+    } else {
+        MapContainer.svgMain = d3.select("#svgMap");
+        MapContainer.groupMain = d3.select("#groupMain");
+        $("#svgMap").attr("width", MapContainer.width);
+        $("#svgMap").attr("height", MapContainer.height);
+        MapContainer.groupBaseMap = d3.select("#groupBaseMap");
+    }
 
     MapNavigator.mapZoom = d3.behavior.zoom().scaleExtent([.1, 10]).on("zoom", function () {
         //console.log("translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");     
@@ -54,8 +63,8 @@ $("#btnDraw").click(function () {
         var convertedZoom = 8.025762957806712 - (6.164035415846804 * Math.exp(-0.0005881212588888687 * BaseMap.scale));
         GoogleMapControl.setZoom(convertedZoom);
         MapContainer.groupBaseMap.selectAll('path').on("mouseenter", function () {
-            
-            $("#dataHintText").html("Region : <i>" + BaseMap.getRegionNameFromPathData(d3.select(this).datum()) +"</i>");
+
+            $("#dataHintText").html("Region : <i>" + BaseMap.getRegionNameFromPathData(d3.select(this).datum()) + "</i>");
             $("#dataHintContainer").show();
             if ($("#chkOverlay").prop('checked') === false)
                 d3.select(this).style("fill", "white");
@@ -399,6 +408,10 @@ $("#toolSlde").click(function () {
         }
         $("#toolSlde").show();
     });
+});
+
+$("#toolHelp").click(function () {
+    window.open('help.html', '_blank');
 });
 
 $("#btnTest").click(function () {
