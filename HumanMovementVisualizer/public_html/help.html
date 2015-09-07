@@ -1,140 +1,149 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-    <title>Simple Map</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="icons/favicon.ico">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/help.css">
+    <head>
+        <title>Simple Map</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" href="icons/favicon.ico">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/help.css">
 
-</head>
+    </head>
 
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12 container-header">
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12 container-header">
 
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div>
-                            <h1 class="text-center">Human Flow Visualizer Guide</h1>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div>
+                                <h1 class="text-center">Human Flow Visualizer Guide</h1>
+                            </div>
                         </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="tool-function">
+                                <h4>&#8226; Loading the base map (Shapefile)</h4>
+
+                                <ol>
+                                    <li>
+                                        In tool window(<em>Shapefile</em> sub-window), click the <em>Choose File</em> button and select a zip file whcih contains shapefiles. (single zip file may contain multiple shapefiles)
+                                    </li>
+                                    <li>
+                                        Click <em>Load File</em> to load the selected zip file.The map(s) in the zip file now shows in the dropdown menu.
+                                    </li>
+                                    <li>
+                                        Select the required map from the dropdown menu and click <em>Draw Map</em> button to render the base map in browser window.
+                                    </li>
+
+                                </ol>
+                            </div>
+
+                            <div class="tool-function">
+                                <h4>&#8226; Loading the data file (CSV file)</h4>
+
+                                <ol>
+                                    <li>
+                                        In <em>CSV Data</em> sub-window, click the <em>Choose File</em> button and select the CSV file whcih contains the visualization data.(CSV file may contain time based visualization data)
+                                    </li>
+                                    <li>
+                                        Click <em>Load File</em> to load the selected CSV file.The map legend is now appear in the bottom left corner and visualization filetrs are now enable to use.
+                                    </li>
+                                    <li>
+                                        Click <em>Show Flows</em> to render data on top of the map. (based on the selected filter)
+                                    </li>
+                                </ol>
+                                <ul>
+                                    <li>
+                                        Note: Required csv file format: <em>Source,Source_Coordinates,Destination,Destination_Coordinates,Time,Volume</em>
+                                    </li>
+                                </ul>
+
+                            </div>
+
+                            <div class="tool-function">
+                                <h4>&#8226; Visualization filters</h4>
+                                <ul>
+                                    <li>
+                                        <em>Filter By:</em> Use to filter the region based data from the csv file
+
+                                    </li>
+                                    <ul>
+                                        <li><em>All:</em> Visualize all csv data on top of the map</li>
+                                        <li><em>Region:</em> Visualize selected region based flow data</li>
+                                    </ul>
+                                    <li>
+                                        <em>Flow Direction:</em> Use to filter the direction of flow between the regions
+
+                                    </li>
+                                    <ul>
+                                        <li><em>From:</em> Visualize region based flow data which goes from selected region to other regions </li>
+                                        <li><em>To:</em> Visualize region based flow data which comes to selected region from other regions</li>
+                                    </ul>
+                                    <li>
+                                        <em>Select Region</em> Show flows for the selected region and direction.
+                                    </li>
+                                    <li>
+                                        <em>Select Time:</em> Show flows for a selected time. (only works when time based CSV data)
+
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tool-function">
+                                <h4>&#8226; Google map overlay</h4>
+                                <ol>
+                                    <li>
+                                        In <em>Edit</em> sub-window, select both <em>Enable Overlay</em> and <em>Enable Google Maps</em> check boxes to overlay the Google maps behind the visualization. (The <em>Google Map Control</em> sub-window appears)
+                                    </li>
+
+                                    <li>
+                                        In <em>Google Map Control</em> sub-window, select a zoom level required and start zoom and paning the overlay visualization untill it get match top of the Google maps. Then click <em>Enable Google Map Panning</em> check box to start pan synchronization.
+                                    </li>
+                                </ol>
+                            </div>
+                            <div class="tool-function">
+                                <h4>&#8226; Editing</h4>
+                                <ul>
+                                    <li>
+                                        <em>Line Width:</em> Edit the visualization line width
+                                    </li>
+
+                                    <li>
+                                        <em>Line Coloring:</em> To select a custom color legend click on a legend color box (bottom left corner) and pick a required color
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tool-function">
+                                <h4>&#8226; Saving </h4>
+                                <ul>
+                                    <li>
+                                        <em>Static Saving:</em> In <em>Save</em> sub-window, click <em>Save as Image</em> button to save the visualization in png image format.
+                                    </li>
+                                    <li>
+                                        <em>Dynamic Saving:</em> Save the web site as html in the browser
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
 
             </div>
         </div>
-        <div class="row">
-
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div class="tool-function">
-                            <h4>&#8226; Loading the base map (Shapefile)</h4>
-
-                            <ol>
-                                <li>
-                                    In tool window(<em>Shapefile</em> sub-window), click the <em>Choose File</em> button and select a zip file whcih contains shapefiles. (single zip file may contain multiple shapefiles)
-                                </li>
-                                <li>
-                                    Click <em>Load File</em> to load the selected zip file.The map(s) in the zip file now shows in the dropdown menu.
-                                </li>
-                                <li>
-                                    Select the required map from the dropdown menu and click <em>Draw Map</em> button to render the base map in browser window.
-                                </li>
-
-                            </ol>
-                        </div>
-
-                        <div class="tool-function">
-                            <h4>&#8226; Loading the data file (CSV file)</h4>
-
-                            <ol>
-                                <li>
-                                    In <em>CSV Data</em> sub-window, click the <em>Choose File</em> button and select the CSV file whcih contains the visualization data.(CSV file may contain time based visualization data)
-                                </li>
-                                <li>
-                                    Click <em>Load File</em> to load the selected CSV file.The map legend is now appear in the bottom left corner and visualization filetrs are now enable to use.
-                                </li>
-                                <li>
-                                    Click <em>Show Flows</em> to render data on top of the map. (based on the selected filter)
-                                </li>
-                            </ol>
-                        </div>
-
-                        <div class="tool-function">
-                            <h4>&#8226; Visualization filters</h4>
-                            <ul>
-                                <li>
-                                    <em>Filter By:</em> Use to filter the region based data from the csv file
-
-                                </li>
-                                <ul>
-                                    <li><em>All:</em> Visualize all csv data on top of the map</li>
-                                    <li><em>Region:</em> Visualize selected region based flow data</li>
-                                </ul>
-                                <li>
-                                    <em>Flow Direction:</em> Use to filter the direction of flow between the regions
-
-                                </li>
-                                <ul>
-                                    <li><em>From:</em> Visualize region based flow data which goes from selected region to other regions </li>
-                                    <li><em>To:</em> Visualize region based flow data which comes to selected region from other regions</li>
-                                </ul>
-                                <li>
-                                    <em>Time:</em> Show flows for a selected time. (only works when time based CSV data)
-
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="tool-function">
-                            <h4>&#8226; Google map overlay</h4>
-                            <ol>
-                                <li>
-                                    In <em>Edit</em> sub-window, select both <em>Enable Overlay</em> and <em>Enable Google Maps</em> check boxes to overlay the Google maps behind the visualization. (The <em>Google Map Control</em> sub-window appears)
-                                </li>
-
-                                <li>
-                                    In <em>Google Map Control</em> sub-window, select a zoom level required and start zoom and paning the overlay visualization untill it get match top of the Google maps. Then click <em>Enable Google Map Panning</em> check box to start pan synchronization.
-                                </li>
-                            </ol>
-                        </div>
-                        <div class="tool-function">
-                            <h4>&#8226; Editing</h4>
-                            <ul>
-                                <li>
-                                    <em>Line Width:</em> Edit the visualization line width
-                                </li>
-
-                                <li>
-                                    <em>Line Coloring:</em> To select a custom color legend click on a legend color box (bottom left corner) and pick a required color
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="tool-function">
-                            <h4>&#8226; Saving </h4>
-                            <ul>
-                                <li>
-                                    <em>Static Saving:</em> In <em>Save</em> sub-window, click <em>Save as Image</em> button to save the visualization in png image format.
-                                </li>
-                                <li>
-                                    <em>Dynamic Saving:</em> Save the web site as html in the browser
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
 
 
-                </div>
-            </div>
-
-        </div>
-    </div>
-    
-    
-</body>
+    </body>
 
 </html>

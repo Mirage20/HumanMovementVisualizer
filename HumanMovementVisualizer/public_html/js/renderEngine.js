@@ -35,8 +35,8 @@ BaseMap.draw = function (geojson) {
 
     projection = d3.geo.mercator().center(d3.geo.centroid(geojson)).scale(scale).translate(offset);
     path = path.projection(projection);
-
-    MapContainer.groupBaseMap = MapContainer.groupMain.append("g").attr("id", "groupBaseMap");
+    
+    MapContainer.groupBaseMap = MapContainer.groupMain.insert("g",":first-child").attr("id", "groupBaseMap");
     DataMapper.mapProjection = projection;
     DataMapper.mapPath = path;
     MapContainer.groupBaseMap.selectAll("path")
@@ -93,6 +93,22 @@ BaseMap.getRegionNameFromPathData = function (pathData)
 
 // html svg and group element container
 var MapContainer = {};
+
+// object for measuring execution times 
+var ExecutionTimer = {};
+
+ExecutionTimer.start = function () {
+    
+    ExecutionTimer.startTime = new Date().getTime();
+
+};
+
+ExecutionTimer.stop = function (message) {
+    
+    ExecutionTimer.stopTime = new Date().getTime();
+    var time = ExecutionTimer.stopTime - ExecutionTimer.startTime;
+    console.log(message + " : " + time + " ms");
+};
 
 // object for managing zooming and panning
 var MapNavigator = {};
@@ -230,7 +246,7 @@ DataMapper.decodeCSVData = function (csvData) {
     DataMapper.regionListSource = new Array();
     DataMapper.regionListDestination = new Array();
     DataMapper.dateTimeList = new Array();
-    
+
     $.each(csvData, function (i, dataRow) {
 
         var tmpVolume = parseInt(dataRow.Volume);

@@ -9,7 +9,7 @@
 /* global BaseMap */
 /* global DataMapper */
 /* global MapContainer */
-/* global MapNavigator, GoogleMapControl */
+/* global MapNavigator, GoogleMapControl, ExecutionTimer */
 
 $(document).ready(function () {
 
@@ -53,12 +53,16 @@ $(window).resize(function () {
 
 // handles the base map draw button click event
 $("#btnDraw").click(function () {
+    DataMapper.clearFlowLinks();
+    DataMapper.clearRegionPoints();
     $("#groupBaseMap").remove();
     var baseMapIndex = parseInt($("#selectBaseMap").val());
     if (Number.isInteger(baseMapIndex))
     {
         var baseMap = ContentManager.geoJSONMaps[baseMapIndex];
+        ExecutionTimer.start();
         BaseMap.draw(baseMap);
+        ExecutionTimer.stop("Basemap render time");
         GoogleMapControl.setPan(BaseMap.centroid);
         var convertedZoom = 8.025762957806712 - (6.164035415846804 * Math.exp(-0.0005881212588888687 * BaseMap.scale));
         GoogleMapControl.setZoom(convertedZoom);
@@ -85,7 +89,9 @@ $("#btnDraw").click(function () {
 $("#btnLoad").click(function () {
     var file = $("#shapeFile")[0].files[0];
     $('#selectBaseMap').attr("disabled", true);
+    ExecutionTimer.start();
     ContentManager.loadShapeFile(file, function (geoJSONMapArray) {
+        ExecutionTimer.stop("Shapefile decode time");
         $('#selectBaseMap option').remove();
         $.each(geoJSONMapArray, function (i, geoJSONMap) {
             $('#selectBaseMap').append($('<option>', {
@@ -110,8 +116,10 @@ $("#btnLoadCSV").click(function () {
     $('#selectRegion').attr("disabled", true);
     $('#selectTime').attr("disabled", true);
 
+    ExecutionTimer.start();
     ContentManager.loadCSVFile(file, function (csvData) {
         DataMapper.decodeCSVData(csvData);
+        ExecutionTimer.stop("CSV data decode time");
         DataMapper.drawLegend(function () {
             MapContainer.groupLegend.selectAll("rect").on("click", function () {
                 var selectionID = $(this).attr("id");
@@ -145,6 +153,7 @@ $("#btnLoadCSV").click(function () {
 
 // handles the flow lines draw button click event
 $("#btnShowFlows").click(function () {
+    ExecutionTimer.start();
     DataMapper.clearFlowLinks();
     DataMapper.clearRegionPoints();
     var regions = new Array();
@@ -210,6 +219,7 @@ $("#btnShowFlows").click(function () {
     });
 
     $('#slideFlowLineWidth').removeAttr("disabled");
+    ExecutionTimer.stop("Visualization render time");
     return false;
 });
 
@@ -412,6 +422,11 @@ $("#toolSlde").click(function () {
 
 $("#toolHelp").click(function () {
     window.open('help.html', '_blank');
+});
+
+$("#toolContainer").mouseenter(function () {
+    $("#welcomeHeaing").hide("fade", {}, 2000, null);
+    $('#toolContainer').off('mouseenter');
 });
 
 $("#btnTest").click(function () {
