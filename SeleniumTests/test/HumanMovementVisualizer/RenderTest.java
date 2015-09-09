@@ -53,11 +53,13 @@ public class RenderTest {
     // public void hello() {}
     @Test
     public void testSampleFlow() throws InterruptedException {
-
+        // load base map
+        // load csv data
         WebElement shapeFileInput = driver.findElement(By.id("shapeFile"));
         shapeFileInput.sendKeys("E:\\UoM\\Sem 5\\Software Engineering Project\\Project\\ShapeFiles\\LKA_adm.zip");
         WebElement btnLoadShapeFile = driver.findElement(By.id("btnLoad"));
         btnLoadShapeFile.click();
+        Thread.sleep(1000);
         Select listBaseMap = new Select(driver.findElement(By.id("selectBaseMap")));
         listBaseMap.selectByIndex(1);
         WebElement btnDrawBaseMap = driver.findElement(By.id("btnDraw"));
@@ -70,7 +72,7 @@ public class RenderTest {
         WebElement btnShowFlows = driver.findElement(By.id("btnShowFlows"));
         btnShowFlows.click();
         Thread.sleep(2000);
-        
+        // test for filters
         Select listFilter = new Select(driver.findElement(By.id("selectFilterDataBy")));
         listFilter.selectByIndex(1);
         Select listDirection = new Select(driver.findElement(By.id("selectFlowDirection")));

@@ -9,14 +9,17 @@
 
 // base map object which handles the geo data for drawing the map
 var BaseMap = {};
-BaseMap.centroid = [80.7009801565226, 7.62960744686815];
-BaseMap.scale = 1;
-BaseMap.regionFillColor = "#F3F1ED";
-BaseMap.regionStrokeColor = "rgb(128,128,128)";
-BaseMap.regionStrokeWidth = "0.5";
+BaseMap.centroid = [80.7009801565226, 7.62960744686815]; // initial centroid
+BaseMap.scale = 1;                                       // initial map scale
+BaseMap.regionFillColor = "#F3F1ED";                    //initial fill color
+BaseMap.regionStrokeColor = "rgb(128,128,128)";         //initial border color
+BaseMap.regionStrokeWidth = "0.5";                      // initial border width
+
+// draw the given geojson data on top of the map
 BaseMap.draw = function (geojson) {
     var scale = 150;
     BaseMap.centroid = d3.geo.centroid(geojson);
+    // creates temp projection
     var projection = d3.geo.mercator()
             .scale(scale)
             .center(BaseMap.centroid)
@@ -25,7 +28,7 @@ BaseMap.draw = function (geojson) {
     var path = d3.geo.path().projection(projection);
     var bounds = path.bounds(geojson);
 
-
+    // re calculate the projection, centriod and map bounds
     var hscale = scale * MapContainer.width / (bounds[1][0] - bounds[0][0]);
     var vscale = scale * MapContainer.height / (bounds[1][1] - bounds[0][1]);
     var scale = (hscale < vscale) ? hscale : vscale;
@@ -35,7 +38,7 @@ BaseMap.draw = function (geojson) {
 
     projection = d3.geo.mercator().center(d3.geo.centroid(geojson)).scale(scale).translate(offset);
     path = path.projection(projection);
-    
+    // render the map on the svg 
     MapContainer.groupBaseMap = MapContainer.groupMain.insert("g",":first-child").attr("id", "groupBaseMap");
     DataMapper.mapProjection = projection;
     DataMapper.mapPath = path;
@@ -54,8 +57,10 @@ BaseMap.draw = function (geojson) {
             //.style("stroke-dasharray", "40,40")
             .style("vector-effect", "non-scaling-stroke");
 
-
+    // clear any previous path data if available
     DataMapper.clearPathData();
+    
+    // add path data and region data for data mapping
     d3.selectAll("#groupBaseMap path").each(function (d, i) {
         DataMapper.addPathData(d);
     });
@@ -81,6 +86,7 @@ BaseMap.draw = function (geojson) {
 //    d3.select(elem).style({fill: 'green'});
 };
 
+// returns region name for given path data
 BaseMap.getRegionNameFromPathData = function (pathData)
 {
     if (typeof pathData.properties.NAME_2 !== 'undefined')
@@ -97,12 +103,13 @@ var MapContainer = {};
 // object for measuring execution times 
 var ExecutionTimer = {};
 
+// start the executuon timer for mesuring timing
 ExecutionTimer.start = function () {
     
     ExecutionTimer.startTime = new Date().getTime();
 
 };
-
+// stop the timer , calculate execution time log it to the browser console
 ExecutionTimer.stop = function (message) {
     
     ExecutionTimer.stopTime = new Date().getTime();
@@ -112,16 +119,17 @@ ExecutionTimer.stop = function (message) {
 
 // object for managing zooming and panning
 var MapNavigator = {};
-
+// get transilation based on given pojection
 MapNavigator.getZoomTransition = function (projectedPosition)
 {
     var translate = this.mapZoom.translate();
     var scale = this.mapZoom.scale();
     return ([(projectedPosition[0] * scale) + translate[0], (projectedPosition[1] * scale) + translate[1]]);
 };
-
+// object for mapping map data with csv data
 var DataMapper = {};
 
+// add new region data to a array
 DataMapper.addPathData = function (data) {
     if (typeof DataMapper.pathData === 'undefined')
         DataMapper.pathData = new Array();
@@ -134,12 +142,12 @@ DataMapper.addPathData = function (data) {
 
 };
 
-
+// clears the path data of the map
 DataMapper.clearPathData = function () {
     DataMapper.pathData = new Array();
     DataMapper.regionToCoordinates = {};
 };
-
+// get the geo coordinates for given region
 DataMapper.getCoordinates = function (region) {
     if (typeof DataMapper.regionToCoordinates !== 'undefined')
         return DataMapper.regionToCoordinates[region];
@@ -182,11 +190,11 @@ DataMapper.drawRegionPoint = function (regionName) {
             .style("vector-effect", "non-scaling-stroke");
 };
 
-
+// clears the flow links from the map
 DataMapper.clearFlowLinks = function () {
     $('#groupFlowLinks line').remove();
 };
-
+// clears the region points from the map
 DataMapper.clearRegionPoints = function () {
     $('#groupRegionPoints circle').remove();
 };
@@ -197,14 +205,15 @@ DataMapper.dateTimeList = new Array();
 DataMapper.minFlowVolume = Number.MAX_VALUE;
 DataMapper.maxFlowVolume = 0;
 
-// dynamic color radiant mapping basd on volume
+// Dynamic color radiant mapping basd on volume
 DataMapper.flowVolumeToColor = function (volume) {
-
+    
     var flowVolume = parseInt(volume);
     var minVolume = DataMapper.minFlowVolume;
     var maxVolume = DataMapper.maxFlowVolume;
-    var colorStepSize = (maxVolume - minVolume) / 7;
+    var colorStepSize = (maxVolume - minVolume) / 7; // calculate the color step size
     var color = "#FFFFFF";
+    // check the margins of the volume and assign colors
     if (minVolume <= flowVolume && flowVolume < (minVolume + (colorStepSize * 1)))
     {
         color = DataMapper.LegenColors.legendColor1;
@@ -246,7 +255,7 @@ DataMapper.decodeCSVData = function (csvData) {
     DataMapper.regionListSource = new Array();
     DataMapper.regionListDestination = new Array();
     DataMapper.dateTimeList = new Array();
-
+    // calculate min and max vloumes and generate source region , destination region and timing arrays
     $.each(csvData, function (i, dataRow) {
 
         var tmpVolume = parseInt(dataRow.Volume);
@@ -262,13 +271,13 @@ DataMapper.decodeCSVData = function (csvData) {
 
         if ($.inArray(dataRow.Destination, DataMapper.regionListDestination) === -1)
             DataMapper.regionListDestination.push(dataRow.Destination);
-
+        // timeing array if time based csv uploaded
         if ($.inArray(dataRow.Time, DataMapper.dateTimeList) === -1)
             DataMapper.dateTimeList.push(dataRow.Time);
 
     });
 };
-
+// initial legend colors
 DataMapper.LegenColors = {
     legendColor1: "#217BAD",
     legendColor2: "#39B59C",
@@ -290,7 +299,7 @@ DataMapper.drawLegend = function (callback) {
     var rectW = 20;
     var rectH = 20;
     var strokeW = 1;
-
+    // genegrate legend recnagles in the browser window for 7 steps
     MapContainer.groupLegend.append("rect")
             .attr("x", x)
             .attr("y", y - (rectH * 0))
@@ -360,7 +369,7 @@ DataMapper.drawLegend = function (callback) {
     var colorStepSize = Math.floor((maxVolume - minVolume) / 7);
     var fontSize = 14;
     var textXOffset = 24;
-
+    // genegrate legend text in the browser window for 7 steps
     MapContainer.groupLegend.append("text").text(minVolume + " to " + (minVolume + (colorStepSize * 1)))
             .attr("x", x + textXOffset)
             .attr("y", (y + fontSize) - (rectH * 0))

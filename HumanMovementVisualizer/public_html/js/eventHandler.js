@@ -13,9 +13,11 @@
 
 $(document).ready(function () {
 
+    //initialize display parameters
     MapContainer.width = $(window).width();
     MapContainer.height = $(window).height();
 
+    //check whether the dynamic saved file or new file
     if (d3.select("#svgMap")[0][0] === null) {
         MapContainer.svgMain = d3.select("#mapContainer").append("svg").attr("id", "svgMap")
                 .attr("width", MapContainer.width)
@@ -28,7 +30,8 @@ $(document).ready(function () {
         $("#svgMap").attr("height", MapContainer.height);
         MapContainer.groupBaseMap = d3.select("#groupBaseMap");
     }
-
+    
+    // set zooming behaviour
     MapNavigator.mapZoom = d3.behavior.zoom().scaleExtent([.1, 10]).on("zoom", function () {
         //console.log("translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");     
         MapContainer.groupMain.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
@@ -37,6 +40,7 @@ $(document).ready(function () {
         GoogleMapControl.oldTranslate = d3.event.translate;
     });
 
+    // load event triggers
     MapContainer.svgMain.call(MapNavigator.mapZoom);
     $("#googleMapContainer").css("visibility", "hidden");
     $("#toolContainerGoogleMaps").hide();
@@ -44,6 +48,7 @@ $(document).ready(function () {
     $("#btnTest").click();
 });
 
+// responsive size changing
 $(window).resize(function () {
     MapContainer.width = $(window).width();
     MapContainer.height = $(window).height();
@@ -59,6 +64,7 @@ $("#btnDraw").click(function () {
     var baseMapIndex = parseInt($("#selectBaseMap").val());
     if (Number.isInteger(baseMapIndex))
     {
+        //execute draw map function
         var baseMap = ContentManager.geoJSONMaps[baseMapIndex];
         ExecutionTimer.start();
         BaseMap.draw(baseMap);
@@ -116,6 +122,7 @@ $("#btnLoadCSV").click(function () {
     $('#selectRegion').attr("disabled", true);
     $('#selectTime').attr("disabled", true);
 
+    // csv data pharsing and decoding
     ExecutionTimer.start();
     ContentManager.loadCSVFile(file, function (csvData) {
         DataMapper.decodeCSVData(csvData);
@@ -133,7 +140,8 @@ $("#btnLoadCSV").click(function () {
         });
 
         $('#selectFilterDataBy').removeAttr("disabled");
-
+        
+        // handles datetime based csv file
         if (DataMapper.dateTimeList[0] !== "") {
 
             $('#selectTime').append($('<option>', {value: "all", text: "All"}));
@@ -158,8 +166,10 @@ $("#btnShowFlows").click(function () {
     DataMapper.clearRegionPoints();
     var regions = new Array();
     var dataRows = new Array();
+    
     $.each(ContentManager.csvData, function (i, dataRow) {
-
+        
+        // check filers and render flows based on the selected filters
         if ($("#selectFilterDataBy").val() === 'region')
         {
             if ($("#selectFlowDirection").val() === 'from')
@@ -185,12 +195,14 @@ $("#btnShowFlows").click(function () {
 
     });
 
+    // handles the time filter input
     if ($("#selectTime").val() !== "all" && $("#selectTime option").length > 0) {
         dataRows = jQuery.grep(dataRows, function (dataRow, index) {
             return dataRow.Time === $("#selectTime").val();
         });
     }
 
+    // build the array for filterd data rows
     $.each(dataRows, function (i, dataRow) {
         DataMapper.drawFlowLink(dataRow);
         if ($.inArray(dataRow.Source, regions) === -1)
@@ -199,10 +211,12 @@ $("#btnShowFlows").click(function () {
             regions.push(dataRow.Destination);
     });
 
+    //draw the flows 
     $.each(regions, function (i, region) {
         DataMapper.drawRegionPoint(region);
     });
 
+    // add event listners for data viewing
     MapContainer.groupFlowLinks.selectAll('line').on("mouseenter", function () {
 
         var lineData = d3.select(this).datum();
@@ -271,7 +285,7 @@ $("#selectFlowDirection").change(function () {
 
 
 
-
+// test case for develper
 $("#btnPin").click(function () {
     var long = $("#long").val();
     var lati = $("#lati").val();
@@ -295,7 +309,7 @@ $("#btnSaveStatic").click(function () {
             .attr("version", 1.1)
             .attr("xmlns", "http://www.w3.org/2000/svg")
             .node().parentNode.innerHTML;
-
+    // convert svg data to an base64 encoded image string
     var imgsrc = 'data:image/svg+xml;base64,' + btoa(svgContent);
 
     d3.select("#staticImage").append("canvas")
@@ -305,14 +319,14 @@ $("#btnSaveStatic").click(function () {
 
     var canvas = document.querySelector("canvas");
     var context = canvas.getContext("2d");
-
+    //save the image to a file
     var image = new Image;
     image.src = imgsrc;
     image.onload = function () {
         context.drawImage(image, 0, 0);
 
         var canvasdata = canvas.toDataURL("image/png");
-
+        //create download link
         var anchorDownload = document.createElement("a");
         anchorDownload.download = "static_visualization.png";
         anchorDownload.href = canvasdata;
@@ -366,7 +380,7 @@ $("#chkOverlay").change(function () {
 
     if ($("#chkOverlay").prop('checked'))
     {
-
+        // google map overlay change
         $("#svgMap").css("background-color", "transparent");
         BaseMap.regionFillColor = "rgba(243, 241, 237, 0.2)";
         BaseMap.regionStrokeWidth = "1px";
@@ -398,11 +412,12 @@ $("#chkOverlay").change(function () {
 
 // handles the google map zoom change slider
 $("#slideGMapZoom").on("input", function () {
-
+    // set discreete zoom level on google maps based on use inputs
     $("#slideGZoomValueText").text($("#slideGMapZoom").val());
     GoogleMapControl.setZoom($("#slideGMapZoom").val());
 });
 
+// handles the tool box slider event
 $("#toolSlde").click(function () {
     $("#toolSlde").hide();
     $("#toolContainer").toggle("slide", {direction: "right"}, 1000, function () {
