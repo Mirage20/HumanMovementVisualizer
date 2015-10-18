@@ -246,11 +246,20 @@ $("#selectFilterDataBy").change(function () {
         $('#selectRegion').removeAttr("disabled");
         if ($("#selectRegion option").length === 0)
             $("#selectFlowDirection").change();
+        
+        MapContainer.groupBaseMap.selectAll('path').on("click", function () {
+            $("#selectRegion").val(BaseMap.getRegionNameFromPathData(d3.select(this).datum()));
+            $("#btnShowFlows").trigger("click");
+        });
+
+        
     }
     else
     {
         $('#selectFlowDirection').attr("disabled", true);
         $('#selectRegion').attr("disabled", true);
+        MapContainer.groupBaseMap.selectAll('path').on('click',null);
+        $("#btnShowFlows").trigger("click");
     }
 
 });
