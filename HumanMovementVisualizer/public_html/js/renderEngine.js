@@ -154,7 +154,7 @@ DataMapper.getCoordinates = function (region) {
 };
 
 DataMapper.flowLineWidth = 2;
-//draw a link between given given csv data row
+//draw a link (color mapped) between given given csv data row
 DataMapper.drawFlowLink = function (lineData) {
 
     if (typeof MapContainer.groupFlowLinks === 'undefined')
@@ -172,6 +172,30 @@ DataMapper.drawFlowLink = function (lineData) {
             .attr("y2", destination[1])
             .attr("stroke-width", DataMapper.flowLineWidth)
             .attr("stroke", color)
+            .style("vector-effect", "non-scaling-stroke");
+
+
+};
+
+DataMapper.widthFlowLinkColor = "rgba(0, 0, 0, 0.3)";
+//draw a link (stroke width mapped) between given given csv data row
+DataMapper.drawWidthFlowLink = function (lineData) {
+
+    if (typeof MapContainer.groupFlowLinks === 'undefined')
+        MapContainer.groupFlowLinks = MapContainer.groupMain.append("g").attr("id", "groupFlowLinks");
+
+    var source = DataMapper.mapProjection(DataMapper.getCoordinates(lineData.Source));
+    var destination = DataMapper.mapProjection(DataMapper.getCoordinates(lineData.Destination));
+    var mappedWidth = DataMapper.flowVolumeToWidth(lineData.Volume);
+    var color = DataMapper.flowVolumeToColor(lineData.Volume);
+    MapContainer.groupFlowLinks.append("line")
+            .datum(lineData)
+            .attr("x1", source[0])
+            .attr("y1", source[1])
+            .attr("x2", destination[0])
+            .attr("y2", destination[1])
+            .attr("stroke-width", mappedWidth)
+            .attr("stroke", DataMapper.widthFlowLinkColor )
             .style("vector-effect", "non-scaling-stroke");
 
 
@@ -244,6 +268,47 @@ DataMapper.flowVolumeToColor = function (volume) {
     }
 
     return color;
+};
+
+// Dynamic width mapping basd on volume
+DataMapper.flowVolumeToWidth = function (volume) {
+    
+    var flowVolume = parseInt(volume);
+    var minVolume = DataMapper.minFlowVolume;
+    var maxVolume = DataMapper.maxFlowVolume;
+    var widthStepSize = (maxVolume - minVolume) / 7; // calculate the width step size
+    var width = 0;
+    // check the margins of the volume and assign colors
+    if (minVolume <= flowVolume && flowVolume < (minVolume + (widthStepSize * 1)))
+    {
+        width = 1;
+    }
+    else if ((minVolume + (widthStepSize * 1)) <= flowVolume && flowVolume < (minVolume + (widthStepSize * 2)))
+    {
+        width = 2;
+    }
+    else if ((minVolume + (widthStepSize * 2)) <= flowVolume && flowVolume < (minVolume + (widthStepSize * 3)))
+    {
+        width = 3;
+    }
+    else if ((minVolume + (widthStepSize * 3)) <= flowVolume && flowVolume < (minVolume + (widthStepSize * 4)))
+    {
+        width = 4;
+    }
+    else if ((minVolume + (widthStepSize * 4)) <= flowVolume && flowVolume < (minVolume + (widthStepSize * 5)))
+    {
+        width = 5;
+    }
+    else if ((minVolume + (widthStepSize * 5)) <= flowVolume && flowVolume < (minVolume + (widthStepSize * 6)))
+    {
+        width = 6;
+    }
+    else if ((minVolume + (widthStepSize * 6)) <= flowVolume && flowVolume <= maxVolume)
+    {
+        width = 7;
+    }
+
+    return width;
 };
 
 

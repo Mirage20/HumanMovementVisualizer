@@ -30,7 +30,7 @@ $(document).ready(function () {
         $("#svgMap").attr("height", MapContainer.height);
         MapContainer.groupBaseMap = d3.select("#groupBaseMap");
     }
-    
+
     // set zooming behaviour
     MapNavigator.mapZoom = d3.behavior.zoom().scaleExtent([.1, 10]).on("zoom", function () {
         //console.log("translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");     
@@ -140,7 +140,7 @@ $("#btnLoadCSV").click(function () {
         });
 
         $('#selectFilterDataBy').removeAttr("disabled");
-        
+
         // handles datetime based csv file
         if (DataMapper.dateTimeList[0] !== "") {
 
@@ -166,9 +166,9 @@ $("#btnShowFlows").click(function () {
     DataMapper.clearRegionPoints();
     var regions = new Array();
     var dataRows = new Array();
-    
+
     $.each(ContentManager.csvData, function (i, dataRow) {
-        
+
         // check filers and render flows based on the selected filters
         if ($("#selectFilterDataBy").val() === 'region')
         {
@@ -204,7 +204,15 @@ $("#btnShowFlows").click(function () {
 
     // build the array for filterd data rows
     $.each(dataRows, function (i, dataRow) {
-        DataMapper.drawFlowLink(dataRow);
+        if ($("#chkWidthMapping").prop('checked'))
+        {
+            DataMapper.drawWidthFlowLink(dataRow);
+        }
+        else
+        {
+            DataMapper.drawFlowLink(dataRow);
+        }
+
         if ($.inArray(dataRow.Source, regions) === -1)
             regions.push(dataRow.Source);
         if ($.inArray(dataRow.Destination, regions) === -1)
@@ -217,22 +225,42 @@ $("#btnShowFlows").click(function () {
     });
 
     // add event listners for data viewing
-    MapContainer.groupFlowLinks.selectAll('line').on("mouseenter", function () {
+    if ($("#chkWidthMapping").prop('checked'))
+    {
+        MapContainer.groupFlowLinks.selectAll('line').on("mouseenter", function () {
 
-        var lineData = d3.select(this).datum();
-        $("#dataHintText").html("Volume From <i>" + lineData.Source + "</i> To <i>" + lineData.Destination + "</i> = <i>" + lineData.Volume + ((lineData.Time !== "") ? ("</i> at <i>" + lineData.Time + "</i>") : "</i>"));
-        $("#dataHintContainer").show();
-        d3.select(this).attr("stroke-width", parseInt(DataMapper.flowLineWidth) + 2);
-    });
+            var lineData = d3.select(this).datum();
+            $("#dataHintText").html("Volume From <i>" + lineData.Source + "</i> To <i>" + lineData.Destination + "</i> = <i>" + lineData.Volume + ((lineData.Time !== "") ? ("</i> at <i>" + lineData.Time + "</i>") : "</i>"));
+            $("#dataHintContainer").show();
+            d3.select(this).attr("stroke", "black");
+        });
 
-    MapContainer.groupFlowLinks.selectAll('line').on("mouseleave", function () {
+        MapContainer.groupFlowLinks.selectAll('line').on("mouseleave", function () {
 
-        $("#dataHintContainer").hide();
-        $("#dataHintText").html("");
-        d3.select(this).attr("stroke-width", parseInt(DataMapper.flowLineWidth));
-    });
+            $("#dataHintContainer").hide();
+            $("#dataHintText").html("");
+            d3.select(this).attr("stroke", DataMapper.widthFlowLinkColor);
+        });
+    }
+    else
+    {
 
-    $('#slideFlowLineWidth').removeAttr("disabled");
+        MapContainer.groupFlowLinks.selectAll('line').on("mouseenter", function () {
+
+            var lineData = d3.select(this).datum();
+            $("#dataHintText").html("Volume From <i>" + lineData.Source + "</i> To <i>" + lineData.Destination + "</i> = <i>" + lineData.Volume + ((lineData.Time !== "") ? ("</i> at <i>" + lineData.Time + "</i>") : "</i>"));
+            $("#dataHintContainer").show();
+            d3.select(this).attr("stroke-width", parseInt(DataMapper.flowLineWidth) + 2);
+        });
+
+        MapContainer.groupFlowLinks.selectAll('line').on("mouseleave", function () {
+
+            $("#dataHintContainer").hide();
+            $("#dataHintText").html("");
+            d3.select(this).attr("stroke-width", parseInt(DataMapper.flowLineWidth));
+        });
+    }
+    //$('#slideFlowLineWidth').removeAttr("disabled");
     ExecutionTimer.stop("Visualization render time");
     return false;
 });
@@ -246,19 +274,19 @@ $("#selectFilterDataBy").change(function () {
         $('#selectRegion').removeAttr("disabled");
         if ($("#selectRegion option").length === 0)
             $("#selectFlowDirection").change();
-        
+
         MapContainer.groupBaseMap.selectAll('path').on("click", function () {
             $("#selectRegion").val(BaseMap.getRegionNameFromPathData(d3.select(this).datum()));
             $("#btnShowFlows").trigger("click");
         });
 
-        
+
     }
     else
     {
         $('#selectFlowDirection').attr("disabled", true);
         $('#selectRegion').attr("disabled", true);
-        MapContainer.groupBaseMap.selectAll('path').on('click',null);
+        MapContainer.groupBaseMap.selectAll('path').on('click', null);
         $("#btnShowFlows").trigger("click");
     }
 
@@ -357,6 +385,22 @@ $("#slideFlowLineWidth").on("input", function () {
     $.each($("#groupFlowLinks line"), function (i, line) {
         $(line).attr("stroke-width", DataMapper.flowLineWidth);
     });
+
+
+});
+
+// handles the enable line width mapping checkbox change
+$("#chkWidthMapping").change(function () {
+
+    $("#btnShowFlows").trigger("click");
+    if ($("#chkWidthMapping").prop('checked'))
+    {
+        $("#slideFlowLineWidth").attr("disabled", true);
+    }
+    else
+    {
+        $("#slideFlowLineWidth").removeAttr("disabled");
+    }
 
 
 });
